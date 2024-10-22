@@ -2,7 +2,7 @@
 {
 	public class Supplier
 	{
-		public string SupplierID { get; set; }
+		public string SupplierId { get; set; }
 		public string CompanyName { get; set; }
 		public string Logo { get; set; }
 		public string ContactPerson { get; set; }
