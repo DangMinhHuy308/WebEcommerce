@@ -28,7 +28,6 @@ namespace WebEcommerce.Areas.Admin.Controllers
             _notification = notyfService;
         }
         [Authorize(Roles = "Admin,Author")]
-
         [HttpGet]
         public async Task<IActionResult> Index(int? page)
         {
@@ -51,6 +50,111 @@ namespace WebEcommerce.Areas.Admin.Controllers
             var pagedCategoriesVM = listOfCategoriesVM.ToPagedList(pageNum, pageSize);
 
             return View(pagedCategoriesVM); // Trả về danh sách phân trang của CategoryVM
+        }
+        [Authorize(Roles = "Admin")]
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View(new CreateCategorytVM());
+        }
+        [Authorize(Roles = "Admin")]
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateCategorytVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+            var category = new Category();
+            category.CategoryName = vm.Name;
+            category.Description = vm.Description;
+            
+            if (category.CategoryName != null) {
+                string slug = vm.Name!.Trim();
+                slug = slug.Replace(" ","-");
+                category.Slug = slug+ "-"+ Guid.NewGuid();
+            }
+            if (vm.Thumbnail != null) {
+                category.Image = UploadImage(vm.Thumbnail);
+            }
+            await _context.Categories.AddAsync(category);
+            await _context.SaveChangesAsync();
+            _notification.Success("Category created successfully");
+            return RedirectToAction("Index");
+        }
+        [Authorize(Roles = "Admin")]
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id) {
+            var category = await _context.Categories.FirstOrDefaultAsync(x=> x.CategoryId == id);
+            if(category == null)
+            {
+                _notification.Error("Category not found");
+                return View();
+            }
+            var vm = new CreateCategorytVM()
+            {
+                Id = category.CategoryId,
+                Name = category.CategoryName,
+                Description = category.Description,
+                Image = category.Image,
+            };
+            return View(vm);
+        }
+        [Authorize(Roles = "Admin")]
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(CreateCategorytVM vm)
+        {
+            if (!ModelState.IsValid) { 
+                return View(vm);
+            }
+            var category = await _context.Categories.FirstOrDefaultAsync(x=>x.CategoryId == vm.Id);
+            if (category == null) {
+                _notification.Error("Category not found");
+                return View(vm);
+            }
+            category.CategoryName = vm.Name;
+            category.Description = vm.Description;
+            if (vm.Thumbnail!= null) {
+                category.Image = UploadImage(vm.Thumbnail);
+            }
+            await _context.SaveChangesAsync();
+            _notification.Success("Edit successfully");
+            return RedirectToAction("Index","Category", new {area= "Admin" });
+
+        }
+        [Authorize(Roles = "Admin")]
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            // Find the category by ID
+            var category = await _context.Categories.FirstOrDefaultAsync(x => x.CategoryId == id);
+            if (category == null)
+            {
+                _notification.Error("Category not found.");
+                return RedirectToAction("Index", "Category", new { area = "Admin" });
+            }
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+            _notification.Success("Delete successfully");
+            return RedirectToAction("Index", "Category", new { area = "Admin" });
+        }
+        private string UploadImage(IFormFile file)
+        {
+            string uniqueFileName = "";
+            var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "thumbnails");
+            uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+            var filePath = Path.Combine(folderPath, uniqueFileName);
+            using (FileStream fileStream = System.IO.File.Create(filePath))
+            {
+                file.CopyTo(fileStream);
+            }
+            return uniqueFileName;
+
         }
     }
 }
