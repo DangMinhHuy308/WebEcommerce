@@ -21,17 +21,8 @@ namespace WebEcommerce.Utilies
 		{
 			if (!_roleManager.RoleExistsAsync(WebsiteRoles.WebsiteAdmin).GetAwaiter().GetResult())
 			{
-				var adminRole = new IdentityRole(WebsiteRoles.WebsiteAdmin)
-				{
-					ConcurrencyStamp = Guid.NewGuid().ToString()
-				};
-				_roleManager.CreateAsync(adminRole).GetAwaiter().GetResult();
-
-				var authorRole = new IdentityRole(WebsiteRoles.WebsiteAuthor)
-				{
-					ConcurrencyStamp = Guid.NewGuid().ToString()
-				};
-				_roleManager.CreateAsync(authorRole).GetAwaiter().GetResult();
+				_roleManager.CreateAsync(new IdentityRole(WebsiteRoles.WebsiteAdmin)).GetAwaiter().GetResult();
+				_roleManager.CreateAsync(new IdentityRole(WebsiteRoles.WebsiteAuthor)).GetAwaiter().GetResult();
 				_userManager.CreateAsync(new ApplicationUser()
 				{
 					UserName = "admin@gmail.com",
