@@ -34,34 +34,32 @@ namespace WebEcommerce.Areas.Admin.Controllers
             int pageSize = 5;
             int pageNum = (page ?? 1);
 
-            // Lấy danh sách danh mục từ cơ sở dữ liệu một cách không đồng bộ
-            var categories = await _context.Categories.ToListAsync(); // Sử dụng ToListAsync để lấy dữ liệu không đồng bộ
+            var categories = await _context.Categories.ToListAsync();
 
-            // Chuyển đổi danh sách danh mục thành danh sách CategoryVM
             var listOfCategoriesVM = categories.Select(x => new CategoryVM()
             {
                 Id = x.CategoryId,
                 Name = x.CategoryName,
-                CreatedDate = x.CreatedDate, // Sử dụng CreatedDate từ danh mục
+                CreatedDate = x.CreatedDate, 
                 Image = x.Image
             }).ToList();
 
             // Phân trang danh sách CategoryVM
             var pagedCategoriesVM = listOfCategoriesVM.ToPagedList(pageNum, pageSize);
 
-            return View(pagedCategoriesVM); // Trả về danh sách phân trang của CategoryVM
+            return View(pagedCategoriesVM); 
         }
         [Authorize(Roles = "Admin")]
 
         [HttpGet]
         public IActionResult Create()
         {
-            return View(new CreateCategorytVM());
+            return View(new CreateCategoryVM());
         }
         [Authorize(Roles = "Admin")]
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateCategorytVM vm)
+        public async Task<IActionResult> Create(CreateCategoryVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -94,7 +92,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
                 _notification.Error("Category not found");
                 return View();
             }
-            var vm = new CreateCategorytVM()
+            var vm = new CreateCategoryVM()
             {
                 Id = category.CategoryId,
                 Name = category.CategoryName,
@@ -106,7 +104,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
         [Authorize(Roles = "Admin")]
 
         [HttpPost]
-        public async Task<IActionResult> Edit(CreateCategorytVM vm)
+        public async Task<IActionResult> Edit(CreateCategoryVM vm)
         {
             if (!ModelState.IsValid) { 
                 return View(vm);

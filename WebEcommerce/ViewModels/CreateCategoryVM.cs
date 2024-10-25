@@ -1,6 +1,6 @@
 ﻿namespace WebEcommerce.ViewModels
 {
-    public class CreateCategorytVM
+    public class CreateCategoryVM
     {
         public int Id { get; set; }
         public string? Name { get; set; }

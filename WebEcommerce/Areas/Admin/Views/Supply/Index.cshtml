@@ -1,15 +1,15 @@
 ﻿@using X.PagedList
 @using X.PagedList.Mvc.Core
-@model IPagedList<WebEcommerce.ViewModels.CategoryVM>
+@model IPagedList<WebEcommerce.ViewModels.SupplyVM>
 @{
-    ViewData["Title"] = "List Of Categories";
+    ViewData["Title"] = "List Of Supply";
 }
 
 <div class="container-fluid">
-    <a class="btn btn-primary mb-1" asp-action="Create" asp-controller="Category" asp-area="Admin">Add Category</a>
+    <a class="btn btn-primary mb-1" asp-action="Create" asp-controller="Supply" asp-area="Admin">Add Supplier</a>
     <div class="card">
         <div class="card-header bg-primary">
-            <h4 class="card-title text-white">List of Categories</h4>
+            <h4 class="card-title text-white">List of Supplies</h4>
         </div>
         <div class="card-body" style="background-color:lightgray;">
             @foreach (var i in Model)
@@ -52,7 +52,7 @@
                 UlElementClasses = new List<string> { "pagination" },
                 LiElementClasses = new List<string> { "page-item", "page-link" },
                 ActiveLiElementClass = "active",
-                
+
             })
         </div>
     </div>

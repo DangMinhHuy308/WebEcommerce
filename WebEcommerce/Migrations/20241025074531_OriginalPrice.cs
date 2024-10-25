@@ -5,21 +5,15 @@
 namespace WebEcommerce.Migrations
 {
     /// <inheritdoc />
-    public partial class addSlug : Migration
+    public partial class OriginalPrice : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Slug",
+            migrationBuilder.AddColumn<float>(
+                name: "OriginalPrice",
                 table: "Products",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Slug",
-                table: "Categories",
-                type: "nvarchar(max)",
+                type: "real",
                 nullable: true);
         }
 
@@ -27,12 +21,8 @@ namespace WebEcommerce.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Slug",
+                name: "OriginalPrice",
                 table: "Products");
-
-            migrationBuilder.DropColumn(
-                name: "Slug",
-                table: "Categories");
         }
     }
 }

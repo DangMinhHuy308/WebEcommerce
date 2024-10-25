@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WebEcommerce.Migrations
 {
     /// <inheritdoc />
-    public partial class updateDataCategory : Migration
+    public partial class UpdateSupplierDate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<DateTime>(
                 name: "CreatedDate",
-                table: "Categories",
+                table: "Suppliers",
                 type: "datetime2",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
@@ -24,7 +24,7 @@ namespace WebEcommerce.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "CreatedDate",
-                table: "Categories");
+                table: "Suppliers");
         }
     }
 }

@@ -1,16 +1,16 @@
-﻿@model WebEcommerce.ViewModels.CreateCategoryVM
+﻿@model WebEcommerce.ViewModels.CreateProductVM
 @{
-    ViewData["Title"] = "Create Category";
+    ViewData["Title"] = "Create Product";
 }
 
 <div class="container-fluid">
-    <a class="btn btn-primary mb-1" asp-action="Index" asp-controller="Category">Go Back</a>
+    <a class="btn btn-primary mb-1" asp-action="Index" asp-controller="Product">Go Back</a>
     <div class="card">
         <div class="card-header bg-primary">
-            <h4 class="card-title text-white">New Category</h4>
+            <h4 class="card-title text-white">New Product</h4>
         </div>
         <div class="card-body">
-            <form asp-action="Create" asp-controller="Category" asp-area="Admin" enctype="multipart/form-data">
+            <form asp-action="Create" asp-controller="Product" asp-area="Admin" enctype="multipart/form-data">
 
                 <div class="row mb-2">
                     <div class="col-9">
@@ -20,11 +20,30 @@
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                         <div class="mb-2">
+                            <label>Category</label>
+                            <select asp-for="CategoryId" class="form-control" asp-items="Model.Categories"></select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
                             <label>Description</label>
                             <input id="richEditor" type="text" asp-for="Description" class="form-control" />
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
-                        
+                        <div class="mb-2">
+                            <label>Price</label>
+                            <input type="number" asp-for="Price" class="form-control" step="0.01" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Original Price</label>
+                            <input type="number" asp-for="OriginalPrice" class="form-control" step="0.01" />
+                            <span asp-validation-for="OriginalPrice" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Sale</label>
+                            <input type="number" asp-for="Sale" class="form-control" step="0.01" />
+                            <span asp-validation-for="Sale" class="text-danger"></span>
+                        </div>
                     </div>
                     <div class="col-3">
                         <div class="mb-2">
@@ -33,7 +52,7 @@
                         <div class="mb-2">
                             <label>Thumbnail</label>
                             <input type="file" asp-for="Thumbnail" class="custom-file" />
-                            <span asp-validation-for="Description" class="text-danger"></span>
+                            <span asp-validation-for="Thumbnail" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
