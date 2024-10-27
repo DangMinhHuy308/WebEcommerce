@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebEcommerce.Data;
+using WebEcommerce.Migrations;
 using WebEcommerce.Models;
 using WebEcommerce.ViewModels;
 using X.PagedList.Extensions;
@@ -54,66 +55,149 @@ namespace WebEcommerce.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var categories = await _context.Categories
-                         .Select(c => new SelectListItem
-                         {
-                             Value = c.CategoryId.ToString(),
-                             Text = c.CategoryName
-                         })
-                         .ToListAsync();
+
 
             var vm = new CreateProductVM
             {
-                Categories = categories
+                Categories = await _context.Categories.Select(c => new SelectListItem
+                {
+                    Value = c.CategoryId.ToString(),
+                    Text = c.CategoryName
+                }).ToListAsync(),
+
+                Suppliers = await _context.Suppliers.Select(s => new SelectListItem
+                {
+                    Value = s.SupplierId.ToString(),
+                    Text = s.CompanyName
+                }).ToListAsync()
             };
 
+            // Đảm bảo rằng cả hai danh sách đều không null
+            if (vm.Categories == null)
+            {
+                vm.Categories = new List<SelectListItem>();
+            }
+
+            if (vm.Suppliers == null)
+            {
+                vm.Suppliers = new List<SelectListItem>();
+            }
+
             return View(vm);
+
         }
         [Authorize(Roles = "Admin")]
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductVM vm)
         {
-            if (!ModelState.IsValid)
+            // Nếu ModelState không hợp lệ, lấy lại danh sách Category và Supplier để hiển thị lại
+            vm.Categories = await _context.Categories.Select(c => new SelectListItem
             {
-                // Cần truyền lại danh sách thể loại nếu ModelState không hợp lệ
-                vm.Categories = await _context.Categories
-                    .Select(c => new SelectListItem
-                    {
-                        Value = c.CategoryId.ToString(),
-                        Text = c.CategoryName
-                    })
-                    .ToListAsync();
-                return View(vm);
+                Value = c.CategoryId.ToString(),
+                Text = c.CategoryName
+            }).ToListAsync();
+
+            vm.Suppliers = await _context.Suppliers.Select(s => new SelectListItem
+            {
+                Value = s.SupplierId.ToString(),
+                Text = s.CompanyName
+            }).ToListAsync();
+
+            if (ModelState.IsValid)
+            {
+                // Tạo một đối tượng Product mới từ ViewModel
+                var product = new Product
+                {
+                    ProductName = vm.ProductName,
+                    Alias = vm.Alias,
+                    CategoryId = vm.CategoryId,
+                    Price = vm.Price,
+                    Sale = vm.Sale,
+                    OriginalPrice = vm.OriginalPrice,
+                    UnitDescription = vm.UnitDescription,
+                    Description = vm.Description,
+                    SupplierId = vm.SupplierId,
+                    IsActive = vm.IsActive,
+                    IsSale = vm.IsSale,
+                };
+                if (product.ProductName != null)
+                {
+                    string slug = vm.ProductName!.Trim();
+                    slug = slug.Replace(" ", "-");
+                    product.Slug = slug + "-" + Guid.NewGuid();
+                }
+                if (vm.Thumbnail != null)
+                {
+                    product.Image = UploadImage(vm.Thumbnail);
+                }
+                // Thêm sản phẩm vào cơ sở dữ liệu
+                _context.Products.Add(product);
+                await _context.SaveChangesAsync();
+                _notification.Success("Add successfully");
+                // Chuyển hướng đến trang danh sách sản phẩm hoặc trang khác sau khi tạo thành công
+                return RedirectToAction("Index"); 
             }
 
-            var product = new Product()
+            return View(vm);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var product = await _context.Products.FirstOrDefaultAsync(x=> x.ProductId == id);
+            if (product == null) {
+                _notification.Error("Product not found");
+                return View();
+            }
+            var vm = new CreateProductVM()
             {
-                ProductName = vm.Name,
-                Description = vm.Description,
-                Price = vm.Price,
-                OriginalPrice = vm.OriginalPrice,
-                Sale = vm.Sale,
-                CategoryId = vm.CategoryId // Lưu ID thể loại vào sản phẩm
+                ProductName = product.ProductName,
+                Alias = product.Alias,
+                CategoryId = product.CategoryId,
+                Price = product.Price,
+                Sale = product.Sale,
+                OriginalPrice = product.OriginalPrice,
+                UnitDescription = product.UnitDescription,
+                Description = product.Description,
+                SupplierId = product.SupplierId,
+                IsActive = product.IsActive,
+                IsSale = product.IsSale,
             };
-
-            // Tạo slug cho sản phẩm
-            if (product.ProductName != null)
+            return View(vm);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(CreateProductVM vm)
+        {
+            if (!ModelState.IsValid)
             {
-                string slug = vm.Name!.Trim();
-                slug = slug.Replace(" ", "-");
-                product.Slug = slug + "-" + Guid.NewGuid();
+                return View(vm);
+            }
+            var product = await _context.Products.FirstOrDefaultAsync(x => x.ProductId == vm.Id);
+            if (product == null)
+            {
+                _notification.Error("Product not found");
+                return View();
             }
 
             if (vm.Thumbnail != null)
             {
                 product.Image = UploadImage(vm.Thumbnail);
             }
-
-            await _context.Products.AddAsync(product);
+                product.ProductName = vm.ProductName;
+                product.Alias = vm.Alias;
+                product.CategoryId = vm.CategoryId;
+                product.Price = vm.Price;
+                product.Sale = vm.Sale;
+                product.OriginalPrice = vm.OriginalPrice;
+                product.UnitDescription = vm.UnitDescription;
+                product.Description = vm.Description;
+                product.SupplierId = vm.SupplierId;
+                product.IsActive = vm.IsActive;
+                product.IsSale = vm.IsSale;
+            _context.Products.Add(product);
             await _context.SaveChangesAsync();
-            _notification.Success("Product created successfully");
-            return RedirectToAction("Index");
+            _notification.Success("Edit successfully");
+            return RedirectToAction("Index","Product", new {area=("Admin")});
         }
         [HttpPost]
         public async Task<IActionResult> Delete(int id)

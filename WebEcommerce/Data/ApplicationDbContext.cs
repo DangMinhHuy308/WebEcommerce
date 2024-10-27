@@ -26,9 +26,19 @@ namespace WebEcommerce.Data
 				.Property(p => p.ProductName)
 				.IsRequired()
 				.HasMaxLength(100);
+            modelBuilder.Entity<Product>()
+				.Property(p => p.Price)
+				.HasColumnType("decimal(18,2)"); 
 
-			// config the Category 
-			modelBuilder.Entity<Category>()
+            modelBuilder.Entity<Product>()
+                .Property(p => p.OriginalPrice)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Product>()
+                .Property(p => p.Sale)
+                .HasColumnType("decimal(18,2)"); 
+                                                 // config the Category 
+            modelBuilder.Entity<Category>()
 				.HasKey(c => c.CategoryId); 
 
 			modelBuilder.Entity<Category>()

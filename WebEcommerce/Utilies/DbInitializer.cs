@@ -23,7 +23,9 @@ namespace WebEcommerce.Utilies
 			{
 				_roleManager.CreateAsync(new IdentityRole(WebsiteRoles.WebsiteAdmin)).GetAwaiter().GetResult();
 				_roleManager.CreateAsync(new IdentityRole(WebsiteRoles.WebsiteAuthor)).GetAwaiter().GetResult();
-				_userManager.CreateAsync(new ApplicationUser()
+                _roleManager.CreateAsync(new IdentityRole(WebsiteRoles.WebsiteCustomer)).GetAwaiter().GetResult();
+
+                _userManager.CreateAsync(new ApplicationUser()
 				{
 					UserName = "admin@gmail.com",
 					Email = "admin@gmail.com",

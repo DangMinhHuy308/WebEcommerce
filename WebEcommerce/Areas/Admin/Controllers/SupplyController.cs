@@ -129,12 +129,12 @@ namespace WebEcommerce.Areas.Admin.Controllers
                 _notification.Error("Category not found");
                 return View(vm);
             }
-            supply.CompanyName = vm.Name;
-            supply.ContactPerson = vm.ContactPerson;
-            supply.Address = vm.Address;
-            supply.Email = vm.Email;
-            supply.Phone = vm.Phone;
-            supply.Description = vm.Description;
+                supply.CompanyName = vm.Name;
+                supply.ContactPerson = vm.ContactPerson;
+                supply.Address = vm.Address;
+                supply.Email = vm.Email;
+                supply.Phone = vm.Phone;
+                supply.Description = vm.Description;
             if (vm.Thumbnail != null)
             {
                 supply.Logo = UploadImage(vm.Thumbnail);
