@@ -49,15 +49,15 @@ namespace WebEcommerce.Areas.Admin.Controllers
 
             return View(pagedCategoriesVM); 
         }
+        
         [Authorize(Roles = "Admin")]
-
         [HttpGet]
         public IActionResult Create()
         {
             return View(new CreateCategoryVM());
         }
-        [Authorize(Roles = "Admin")]
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateCategoryVM vm)
         {
@@ -82,8 +82,8 @@ namespace WebEcommerce.Areas.Admin.Controllers
             _notification.Success("Category created successfully");
             return RedirectToAction("Index");
         }
+        
         [Authorize(Roles = "Admin")]
-
         [HttpGet]
         public async Task<IActionResult> Edit(int id) {
             var category = await _context.Categories.FirstOrDefaultAsync(x=> x.CategoryId == id);
@@ -101,8 +101,8 @@ namespace WebEcommerce.Areas.Admin.Controllers
             };
             return View(vm);
         }
+        
         [Authorize(Roles = "Admin")]
-
         [HttpPost]
         public async Task<IActionResult> Edit(CreateCategoryVM vm)
         {
@@ -119,13 +119,15 @@ namespace WebEcommerce.Areas.Admin.Controllers
             if (vm.Thumbnail!= null) {
                 category.Image = UploadImage(vm.Thumbnail);
             }
+
+            _context.Categories.Update(category);
             await _context.SaveChangesAsync();
             _notification.Success("Edit successfully");
-            return RedirectToAction("Index","Category", new {area= "Admin" });
+            return RedirectToAction("Index");
 
         }
+        
         [Authorize(Roles = "Admin")]
-
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {

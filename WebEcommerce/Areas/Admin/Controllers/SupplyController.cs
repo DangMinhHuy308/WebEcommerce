@@ -69,11 +69,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
                 Email = vm.Email,
                 Phone = vm.Phone,
                 Description = vm.Description
-                
-
             };
-
-
             //if (supply.CompanyName != null)
             //{
             //    string slug = vm.Name!.Trim();
@@ -89,9 +85,8 @@ namespace WebEcommerce.Areas.Admin.Controllers
             _notification.Success("Supply created successfully");
             return RedirectToAction("Index");
         }
-
+        
         [Authorize(Roles = "Admin")]
-
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -114,8 +109,8 @@ namespace WebEcommerce.Areas.Admin.Controllers
             };
             return View(vm);
         }
+        
         [Authorize(Roles = "Admin")]
-
         [HttpPost]
         public async Task<IActionResult> Edit(CreateSupplyVM vm)
         {
@@ -139,14 +134,14 @@ namespace WebEcommerce.Areas.Admin.Controllers
             {
                 supply.Logo = UploadImage(vm.Thumbnail);
             }
+            _context.Suppliers.Update(supply);
             await _context.SaveChangesAsync();
             _notification.Success("Edit successfully");
-            return RedirectToAction("Index", "Supply", new { area = "Admin" });
+            return RedirectToAction("Index");
 
         }
 
         [Authorize(Roles = "Admin")]
-
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
