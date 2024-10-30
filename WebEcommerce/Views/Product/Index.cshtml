@@ -21,12 +21,14 @@
     <div class="col-md-6 col-lg-6 col-xl-4">
         <div class="rounded position-relative fruite-item">
             <div class="fruite-img">
-                <img src="~/thumbnails/@i.Image" class="img-fluid w-100 rounded-top" />
+                <a asp-action="Detail" asp-controller="Product" asp-route-id="@i.Id">
+
+                    <img src="~/thumbnails/@i.Image" class="img-fluid w-100 rounded-top" />
+                </a>
             </div>
             <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
             <div class="p-4 border border-secondary border-top-0 rounded-bottom">
                 <h4>@i.Name</h4>
-                <p>@Html.Raw(i.Description)</p>
                 <div class="d-flex justify-content-center align-items-center flex-lg-wrap">
                     <p class="text-dark fs-5 fw-bold mb-0 me-3">@WebEcommerce.Common.Common.FormatNumber(i.Price, 0) / kg</p>
                     <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary">

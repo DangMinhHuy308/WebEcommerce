@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebEcommerce.Data;
 using WebEcommerce.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebEcommerce.Controllers
 {
     public class ProductController : Controller
     {
         public readonly ApplicationDbContext _context;
+
         public ProductController(ApplicationDbContext context)
         {
             _context = context;
@@ -39,10 +42,33 @@ namespace WebEcommerce.Controllers
                 Id = x.ProductId,
                 Name = x.ProductName,
                 Price = x.Price,
-                Description = x.Description,
                 Image = x.Image
             });
             return View(result);
+        }
+        public IActionResult Detail(int id) {
+
+            var product = _context.Products
+            .Include(x => x.Category) 
+            .SingleOrDefault(x => x.ProductId == id);
+
+            if (product == null)
+            {
+                TempData["Message"] = $"Không thấy sản phẩm có mã {id}";
+                return Redirect("/404");
+            }
+
+            var result = new ProductDetailVM
+            {
+                Id = product.ProductId,
+                Name = product.ProductName,
+                Price = product.Price,
+                Description = product.Description,
+                Image = product.Image,
+                CategoryName = product.Category?.CategoryName
+            };
+
+            return View(result); 
         }
     }
 }
