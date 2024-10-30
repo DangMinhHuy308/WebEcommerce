@@ -43,6 +43,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
                 CategoryName = p.Category?.CategoryName, // Thêm kiểm tra null
                 CreatedDate = p.CreatedDate,
                 Description = p.Description,
+                Price = p.Price,
                 Image = p.Image
             }).ToList();
 

@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
-using WebEcommerce.Models;
 
 namespace WebEcommerce.ViewModels
 {
@@ -22,8 +20,8 @@ namespace WebEcommerce.ViewModels
         public IFormFile? Thumbnail { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        public List<SelectListItem> Categories { get; set; } = new List<SelectListItem>(); 
-        public List<SelectListItem> Suppliers { get; set; } = new List<SelectListItem>(); 
+        public List<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> Suppliers { get; set; } = new List<SelectListItem>();
 
     }
 }
