@@ -27,5 +27,22 @@ namespace WebEcommerce.Controllers
             });
             return View(result);
         }
+        public IActionResult Search(string? query)
+        {
+            var product = _context.Products.AsQueryable();
+            if (query != null)
+            {
+                product = product.Where(x => x.ProductName.Contains(query));
+            }
+            var result = product.Select(x => new ProductVM
+            {
+                Id = x.ProductId,
+                Name = x.ProductName,
+                Price = x.Price,
+                Description = x.Description,
+                Image = x.Image
+            });
+            return View(result);
+        }
     }
 }

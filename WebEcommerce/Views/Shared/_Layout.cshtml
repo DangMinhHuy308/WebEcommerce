@@ -98,8 +98,8 @@
                 </div>
                 <div class="modal-body d-flex align-items-center">
                     <div class="input-group w-75 mx-auto d-flex">
-                        <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
-                        <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                        <input id="searchText" type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
+                        <span id="seachButton" class="input-group-text p-3"><i class="fa fa-search"></i></span>
                     </div>
                 </div>
             </div>
@@ -213,7 +213,14 @@
     <!-- Template Javascript -->
     <script src="~/theme/js/main.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
-
+    <script>
+        $(document).ready(function () {
+            $("#seachButton").click(function () {
+                let url = `/Product/Search?query=` + $("#searchText").val();
+                window.location.href = url;
+            });
+        });
+    </script>
 </body>
 
 </html>
