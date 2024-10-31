@@ -15,7 +15,8 @@
         public int? ViewCount { get; set; }
 		public string? UnitDescription { get; set; }
 		public string? Description { get; set; }
-		public int SupplierId { get; set; }
+        public int? Quantity { get; set; }
+        public int SupplierId { get; set; }
         public string? Slug { get; set; }
         public bool IsActive { get; set; } 
         public bool IsSale { get; set; } 

@@ -8,7 +8,7 @@ namespace WebEcommerce.Controllers
 {
     public class ProductController : Controller
     {
-        public readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public ProductController(ApplicationDbContext context)
         {
@@ -46,8 +46,8 @@ namespace WebEcommerce.Controllers
             });
             return View(result);
         }
-        public IActionResult Detail(int id) {
-
+        public IActionResult Detail(int id) 
+        {
             var product = _context.Products
             .Include(x => x.Category) 
             .SingleOrDefault(x => x.ProductId == id);
