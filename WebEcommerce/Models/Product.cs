@@ -20,6 +20,7 @@
         public string? Slug { get; set; }
         public bool IsActive { get; set; } 
         public bool IsSale { get; set; } 
+        public bool IsRelated { get; set; }
 
         // Navigation Properties
         public virtual Category Category { get; set; }

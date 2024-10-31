@@ -120,6 +120,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
                     SupplierId = vm.SupplierId,
                     IsActive = vm.IsActive,
                     IsSale = vm.IsSale,
+                    IsRelated = vm.IsRelated
                 };
                 if (product.ProductName != null)
                 {

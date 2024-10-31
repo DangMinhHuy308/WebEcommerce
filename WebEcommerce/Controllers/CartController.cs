@@ -13,7 +13,7 @@ namespace WebEcommerce.Controllers
             _context = context;
         }
         const string CART_KEY = "MYCART";
-        public List<CartVM> Cart => HttpContext.Session.Get<List<CartVM>>(CART_KEY) ?? new List<CartVM>();
+        public List<CartVM> Cart => HttpContext.Session.Get<List<CartVM>>(MySetting.CART_KEY) ?? new List<CartVM>();
         public IActionResult Index()
         {
             return View(Cart);
@@ -42,7 +42,7 @@ namespace WebEcommerce.Controllers
                 item.Quantity += quantity;
             }
 
-            HttpContext.Session.Set(CART_KEY, cart);
+            HttpContext.Session.Set(MySetting.CART_KEY, cart);
             return RedirectToAction("Index");
         }
         public IActionResult RemoveToCart(int id)
@@ -53,7 +53,7 @@ namespace WebEcommerce.Controllers
             {
 
                 cart.Remove(item);
-                HttpContext.Session.Set(CART_KEY, cart);
+                HttpContext.Session.Set(MySetting.CART_KEY, cart);
             }
             return RedirectToAction("Index");
 

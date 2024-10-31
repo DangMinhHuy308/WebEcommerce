@@ -18,6 +18,11 @@ namespace WebEcommerce.ViewModels
         [Required]
 
         public string? Password { get; set; }
-        public bool IsAdmin { get; set; }
+		public string? PhoneNumber { get; set; }
+		public string? Address { get; set; }
+        public bool Gender { get; set; } = true;
+        public string? Image { get; set; }
+		public IFormFile? Thumbnail { get; set; }
+		public bool IsAdmin { get; set; }
     }
 }

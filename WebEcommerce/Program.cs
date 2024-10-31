@@ -2,6 +2,7 @@ using AspNetCoreHero.ToastNotification;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebEcommerce.Data;
+using WebEcommerce.Helpers;
 using WebEcommerce.Models;
 using WebEcommerce.Utilies;
 
@@ -17,10 +18,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
-	options.LoginPath = "/login";
+	options.LoginPath = "/admin/login";
 	options.LoginPath = "/AccessDenied";
 
 });
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {

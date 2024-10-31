@@ -17,6 +17,7 @@ namespace WebEcommerce.ViewModels
         public string? Description { get; set; }
         public bool IsActive { get; set; }
         public bool IsSale { get; set; }
+        public bool IsRelated { get; set; }
         public IFormFile? Thumbnail { get; set; }
         public DateTime CreatedDate { get; set; }
 

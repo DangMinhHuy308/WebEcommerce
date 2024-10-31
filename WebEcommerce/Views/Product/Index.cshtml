@@ -26,13 +26,12 @@
                     <img src="~/thumbnails/@i.Image" class="img-fluid w-100 rounded-top" />
                 </a>
             </div>
-            <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
             <div class="p-4 border border-secondary border-top-0 rounded-bottom">
                 <h4>@i.Name</h4>
-                <div class="d-flex justify-content-center align-items-center flex-lg-wrap">
-                    <p class="text-dark fs-5 fw-bold mb-0 me-3">@WebEcommerce.Common.Common.FormatNumber(i.Price, 0) / kg</p>
+                <div class="d-flex justify-content-between flex-lg-wrap">
+                    <p class="text-dark fs-5 fw-bold mb-0">@WebEcommerce.Common.Common.FormatNumber(i.Price, 0)đ</p>
                     <a asp-action="AddToCart" asp-controller="Cart" asp-route-id="@i.Id" class="btn border border-secondary rounded-pill px-3 text-primary">
-                        <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                        <i class="fa fa-shopping-bag me-2 text-primary"></i> Thêm vào giỏ
                     </a>
                 </div>
             </div>
