@@ -86,8 +86,15 @@
                                 <i class="fas fa-user fa-2x"></i>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Register">Register</a></li>
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Login">Login</a></li>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a></li>
+                                }
+                                else
+                                {
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Register">Register</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Login">Login</a></li>
+                                }
                             </ul>
                         </div>
                     </div>
@@ -221,6 +228,8 @@
     <!-- Template Javascript -->
     <script src="~/theme/js/main.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    @await Component.InvokeAsync("Notyf")
+
     <script>
         $(document).ready(function () {
             $("#seachButton").click(function () {

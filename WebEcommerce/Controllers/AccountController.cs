@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebEcommerce.Data;
 using WebEcommerce.Models;
 using WebEcommerce.Utilies;
@@ -79,7 +80,7 @@ namespace WebEcommerce.Controllers
 					await _userManager.AddToRoleAsync(applicationUser, WebsiteRoles.WebsiteCustomer);
 				}
 				_notification.Success("User registered successfully");
-				return RedirectToAction("Product");
+				return RedirectToAction("Index", "Home");
 			}
 			foreach (var error in result.Errors)
 			{
@@ -87,7 +88,42 @@ namespace WebEcommerce.Controllers
 			}
 			return View(vm);
 		}
-		private string UploadImage(IFormFile file)
+		[HttpGet]
+		public IActionResult Login()
+		{
+			if (!HttpContext.User.Identity!.IsAuthenticated)
+			{
+				return View(new LoginVM());
+			}
+			return RedirectToAction("Index", "Home");
+		}
+		[HttpPost]
+		public async Task<IActionResult> Login(LoginVM vm)
+		{
+			if (!ModelState.IsValid) { return View(vm); }
+			var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == vm.Username);
+			if (existingUser == null)
+			{
+				_notification.Error("Username does not exist");
+				return View(vm);
+			}
+			var verifyPassword = await _userManager.CheckPasswordAsync(existingUser, vm.Password);
+			if (!verifyPassword)
+			{
+				_notification.Error("Password does not exist");
+				return View(vm);
+			}
+			await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, vm.RememberMe, true);
+			_notification.Success("Login Successful");
+			return RedirectToAction("Index", "Home");
+		}
+        public IActionResult Logout()
+        {
+            _signInManager.SignOutAsync();
+            _notification.Success("Logout successfull");
+            return RedirectToAction("Index", "Home");
+        }
+        private string UploadImage(IFormFile file)
 		{
 			string uniqueFileName = "";
 			var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "thumbnails");
