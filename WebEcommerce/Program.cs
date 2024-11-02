@@ -19,7 +19,8 @@ builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
 	options.LoginPath = "/admin/login";
-	options.LoginPath = "/AccessDenied";
+    options.LoginPath = "/Account/Login";
+    options.LoginPath = "/AccessDenied";
 
 });
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
