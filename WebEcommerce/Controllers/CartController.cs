@@ -2,6 +2,7 @@
 using WebEcommerce.Data;
 using WebEcommerce.ViewModels;
 using WebEcommerce.Helpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebEcommerce.Controllers
 {
@@ -63,7 +64,15 @@ namespace WebEcommerce.Controllers
             HttpContext.Session.Remove("MYCART");
             return RedirectToAction("Index");
         }
-       
+        [Authorize]
+       public IActionResult CheckOut()
+       {
+            if(Cart.Count == 0)
+            {
+                return Redirect("/");
+            }
+            return View(Cart);
+       }
 
     }
 }
