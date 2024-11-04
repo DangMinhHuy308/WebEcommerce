@@ -13,48 +13,41 @@
 <div class="container-fluid py-5">
     <div class="container py-5">
         <h1 class="mb-4">Billing details</h1>
-        <form asp-action="CheckOut" asp-controller="Cart">
+        <form asp-action="CheckOut" asp-controller="Cart" method="post">
             <div class="row g-5">
-                <form asp-action="CheckOut" asp-controller="Cart"> 
-
-                    <div class="col-md-12 col-lg-6 col-xl-7">
-                        <div class="row">
-                            <div class="col-md-12 col-lg-6">
-                                <div class="form-item w-100">
-                                        <label class="form-label my-3">Họ<sup>*</sup></label>
-                                        <input type="text" class="form-control" name="LastName" placeholder="Tên">
-                                </div>
+                <div class="col-md-12 col-lg-6 col-xl-7">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Họ<sup>*</sup></label>
+                                <input type="text" class="form-control" name="LastName" placeholder="Tên" />
                             </div>
-                            <div class="col-md-12 col-lg-6">
-                                <div class="form-item w-100">
-                                    <label class="form-label my-3">Tên<sup>*</sup></label>
-                                        <input type="text" class="form-control" name="FirstName" placeholder="Họ">
-                                </div>
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Tên<sup>*</sup></label>
+                                <input type="text" class="form-control" name="FirstName" placeholder="Họ" />
                             </div>
-                        
-                        </div>
-                    
-                        <div class="form-item">
-                            <label class="form-label my-3">Địa chỉ<sup>*</sup></label>
-                                <input type="text" class="form-control" placeholder="Địa chỉ" name="Address">
-                        </div>
-                    
-                        <div class="form-item">
-                            <label class="form-label my-3">SDT<sup>*</sup></label>
-                                <input type="tel" class="form-control" name="PhoneNumber" placeholder="Số điện thoại">
-                        </div>
-                        <div class="form-item">
-                            <label class="form-label my-3">Email<sup>*</sup></label>
-                                <input type="email" class="form-control" name="Email" placeholder="Email">
-                        </div>
-                    
-                            <hr>
-
-                        <div class="form-item">
-                            <textarea name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Ghi chú"></textarea>
                         </div>
                     </div>
-                </form>
+                    <div class="form-item">
+                        <label class="form-label my-3">Địa chỉ<sup>*</sup></label>
+                        <input type="text" class="form-control" placeholder="Địa chỉ" name="Address" />
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label my-3">SDT<sup>*</sup></label>
+                        <input type="tel" class="form-control" name="PhoneNumber" placeholder="Số điện thoại" />
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label my-3">Email<sup>*</sup></label>
+                        <input type="email" class="form-control" name="Email" placeholder="Email" />
+                    </div>
+                    <div class="form-item">
+                        <label class="form-label my-3">Ghi chú</label>
+                        <textarea class="form-control" name="Note" cols="30" rows="4" placeholder="Ghi chú"></textarea>
+                    </div>
+                </div>
+
                 <div class="col-md-12 col-lg-6 col-xl-5">
                     <div class="table-responsive">
                         <table class="table">
@@ -68,61 +61,44 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach(var i in Model)
+                                @foreach (var item in Model)
                                 {
-                                    
-                                <tr>
-                                    <th scope="row">
-                                        <div class="d-flex align-items-center mt-2">
-                                                <img src="~/thumbnails/@i.Image" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="">
-                                        </div>
-                                    </th>
-                                    <td class="py-5">@i.Name</td>
-                                        <td class="py-5">@WebEcommerce.Common.Common.FormatNumber(i.TotalPrice, 0)đ</td>
-                                    <td class="py-5">@i.Quantity</td>
-                                        <td class="py-5">@WebEcommerce.Common.Common.FormatNumber(Model.Sum(x => x.TotalPrice), 0)đ</td>
-                                </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center mt-2">
+                                                <img src="~/thumbnails/@item.Image" class="img-fluid rounded-circle" style="width: 90px; height: 90px;" alt="" />
+                                            </div>
+                                        </td>
+                                        <td class="py-5">@item.Name</td>
+                                        <td class="py-5">@WebEcommerce.Common.Common.FormatNumber(item.Price, 0)đ</td>
+                                        <td class="py-5">@item.Quantity</td>
+                                        <td class="py-5">@WebEcommerce.Common.Common.FormatNumber(item.TotalPrice, 0)đ</td>
+                                    </tr>
                                 }
-                                
                             </tbody>
                         </table>
                     </div>
-                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                        <div class="col-12">
-                            <div class="form-check text-start my-3">
-                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Transfer-1" name="Transfer" value="Transfer">
-                                <label class="form-check-label" for="Transfer-1">Direct Bank Transfer</label>
-                            </div>
-                            <p class="text-start text-dark">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
-                        </div>
+
+                    <div class="d-flex justify-content-between">
+                        <h5>Subtotal:</h5>
+                        <p>@WebEcommerce.Common.Common.FormatNumber(Model.Sum(x => x.TotalPrice), 0)đ</p>
                     </div>
-                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                        <div class="col-12">
-                            <div class="form-check text-start my-3">
-                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Payments-1" name="Payments" value="Payments">
-                                <label class="form-check-label" for="Payments-1">Check Payments</label>
-                            </div>
-                        </div>
+
+                    <div class="form-check mt-4">
+                        <input type="radio" class="form-check-input" id="BankTransfer" name="PaymentMethod" value="BankTransfer">
+                        <label class="form-check-label" for="BankTransfer">Direct Bank Transfer</label>
+                        <p>Make your payment directly into our bank account. Your order will not be shipped until the funds have cleared.</p>
                     </div>
-                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                        <div class="col-12">
-                            <div class="form-check text-start my-3">
-                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Delivery-1" name="Delivery" value="Delivery">
-                                <label class="form-check-label" for="Delivery-1">Cash On Delivery</label>
-                            </div>
-                        </div>
+                    <div class="form-check mt-4">
+                        <input type="radio" class="form-check-input" id="CashOnDelivery" name="PaymentMethod" value="CashOnDelivery">
+                        <label class="form-check-label" for="CashOnDelivery">Cash On Delivery</label>
                     </div>
-                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                        <div class="col-12">
-                            <div class="form-check text-start my-3">
-                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Paypal-1" name="Paypal" value="Paypal">
-                                <label class="form-check-label" for="Paypal-1">Paypal</label>
-                            </div>
-                        </div>
+                    <div class="form-check mt-4">
+                        <input type="radio" class="form-check-input" id="Paypal" name="PaymentMethod" value="Paypal">
+                        <label class="form-check-label" for="Paypal">Paypal</label>
                     </div>
-                    <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                        <button type="button" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Place Order</button>
-                    </div>
+
+                    <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary mt-4">Place Order</button>
                 </div>
             </div>
         </form>

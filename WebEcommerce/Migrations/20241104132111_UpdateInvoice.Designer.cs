@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebEcommerce.Data;
 
@@ -11,9 +12,11 @@ using WebEcommerce.Data;
 namespace WebEcommerce.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241104132111_UpdateInvoice")]
+    partial class UpdateInvoice
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -316,6 +319,8 @@ namespace WebEcommerce.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
+                    b.HasIndex("StatusId");
+
                     b.ToTable("Invoices");
                 });
 
@@ -333,11 +338,11 @@ namespace WebEcommerce.Migrations
                     b.Property<int>("InvoiceDetailId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<float?>("UnitPrice")
+                        .HasColumnType("real");
 
                     b.HasKey("InvoiceId", "ProductId");
 
@@ -414,6 +419,25 @@ namespace WebEcommerce.Migrations
                     b.HasIndex("SupplierId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("WebEcommerce.Models.Status", b =>
+                {
+                    b.Property<int>("StatusId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StatusId"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StatusName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("StatusId");
+
+                    b.ToTable("Statuses");
                 });
 
             modelBuilder.Entity("WebEcommerce.Models.Supplier", b =>
@@ -534,7 +558,15 @@ namespace WebEcommerce.Migrations
                         .WithMany("Invoices")
                         .HasForeignKey("ApplicationUserId");
 
+                    b.HasOne("WebEcommerce.Models.Status", "Status")
+                        .WithMany("Invoices")
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("ApplicationUser");
+
+                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("WebEcommerce.Models.InvoiceDetail", b =>
@@ -588,6 +620,11 @@ namespace WebEcommerce.Migrations
             modelBuilder.Entity("WebEcommerce.Models.Product", b =>
                 {
                     b.Navigation("InvoiceDetails");
+                });
+
+            modelBuilder.Entity("WebEcommerce.Models.Status", b =>
+                {
+                    b.Navigation("Invoices");
                 });
 
             modelBuilder.Entity("WebEcommerce.Models.Supplier", b =>

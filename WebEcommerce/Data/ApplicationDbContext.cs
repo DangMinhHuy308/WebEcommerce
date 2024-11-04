@@ -12,7 +12,6 @@ namespace WebEcommerce.Data
 		public DbSet<Category>? Categories { get; set; }
 		public DbSet<Invoice>? Invoices { get; set; }
 		public DbSet<InvoiceDetail>? InvoiceDetails { get; set; }
-		public DbSet<Status>? Statuses { get; set; }
 		public DbSet<Supplier>? Suppliers { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -69,9 +68,7 @@ namespace WebEcommerce.Data
 				.WithMany(p => p.InvoiceDetails)
 				.HasForeignKey(id => id.ProductId);
 
-			// config the Status 
-			modelBuilder.Entity<Status>()
-				.HasKey(s => s.StatusId);
+		
 
 			// config the Supplier 
 			modelBuilder.Entity<Supplier>()

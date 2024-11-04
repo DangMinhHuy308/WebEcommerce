@@ -3,6 +3,7 @@ using WebEcommerce.Data;
 using WebEcommerce.ViewModels;
 using WebEcommerce.Helpers;
 using Microsoft.AspNetCore.Authorization;
+using WebEcommerce.Models;
 
 namespace WebEcommerce.Controllers
 {
@@ -65,6 +66,7 @@ namespace WebEcommerce.Controllers
             return RedirectToAction("Index");
         }
         [Authorize]
+        [HttpGet]
        public IActionResult CheckOut()
        {
             if(Cart.Count == 0)
@@ -73,6 +75,46 @@ namespace WebEcommerce.Controllers
             }
             return View(Cart);
        }
+        [Authorize]
+        [HttpPost]
+
+        public IActionResult CheckOut(CheckoutVM vm)
+        {
+            if (!ModelState.IsValid) { return View(vm); }
+
+            var invoice = new Invoice
+            {
+                FirstName = vm.FirstName,
+                LastName = vm.LastName,
+                Address = vm.Address,
+                Email = vm.Email,
+                PhoneNumber = vm.PhoneNumber,
+                OrderDate = vm.OrderDate,
+                Notes = vm.Notes,
+                PaymentMethod = vm.PaymentMethod,
+                ShippingMethod = vm.ShippingMethod,
+                StatusId = 0
+
+            };
+            _context.Add(invoice);
+            _context.SaveChanges();
+            foreach (var i in Cart)
+            {
+                var invoiceDetail = new InvoiceDetail
+                {
+                    InvoiceId = invoice.InvoiceId,
+                    ProductId = i.Id,
+                    Quantity = i.Quantity,
+                    Price = i.Price
+                };
+                _context.InvoiceDetails.Add(invoiceDetail);
+            }
+            _context.SaveChanges();
+
+            Cart.Clear();
+
+            return RedirectToAction("OrderConfirmation", new {id = invoice.InvoiceId });
+        }
 
     }
 }
