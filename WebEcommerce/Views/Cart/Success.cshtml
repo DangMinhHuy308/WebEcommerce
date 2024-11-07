@@ -1,0 +1,13 @@
+﻿@model WebEcommerce.ViewModels.CheckoutVM
+@{
+    ViewData["Title"] = "Thanh toán thành công";
+}
+
+<div class="container " style="margin-top: 56px">
+    <div class="text-center">
+        <h1 class="display-4 text-success">Thanh toán thành công!</h1>
+        <p class="lead mt-4">Cảm ơn bạn đã mua sắm tại cửa hàng của chúng tôi.</p>
+        <p>Chúng tôi sẽ xử lý đơn hàng của bạn và gửi thông tin cập nhật sớm nhất.</p>
+        <a asp-action="Index" asp-controller="Home" class="btn btn-primary mt-4">Quay về trang chủ</a>
+    </div>
+</div>

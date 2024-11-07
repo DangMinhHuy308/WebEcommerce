@@ -321,25 +321,30 @@ namespace WebEcommerce.Migrations
 
             modelBuilder.Entity("WebEcommerce.Models.InvoiceDetail", b =>
                 {
-                    b.Property<int>("InvoiceId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<float?>("Discount")
                         .HasColumnType("real");
 
-                    b.Property<int>("InvoiceDetailId")
+                    b.Property<int>("InvoiceId")
                         .HasColumnType("int");
 
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
-                    b.HasKey("InvoiceId", "ProductId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("InvoiceId");
 
                     b.HasIndex("ProductId");
 

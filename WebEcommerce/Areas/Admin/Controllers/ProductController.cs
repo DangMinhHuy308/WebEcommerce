@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebEcommerce.Data;
-using WebEcommerce.Migrations;
+//using WebEcommerce.Migrations;
 using WebEcommerce.Models;
 using WebEcommerce.ViewModels;
 using X.PagedList.Extensions;

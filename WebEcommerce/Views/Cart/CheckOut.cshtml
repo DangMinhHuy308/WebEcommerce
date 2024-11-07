@@ -1,21 +1,15 @@
 ﻿@model IEnumerable<WebEcommerce.ViewModels.CartVM>
-<!-- Single Page Header start -->
-<div class="container-fluid page-header py-5">
-    <h1 class="text-center text-white display-6">Checkout</h1>
-    <ol class="breadcrumb justify-content-center mb-0">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item"><a href="#">Pages</a></li>
-        <li class="breadcrumb-item active text-white">Checkout</li>
-    </ol>
-</div>
-<!-- Single Page Header End -->
-<!-- Checkout Page Start -->
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+}
+
+<!-- Cart Page Start -->
 <div class="container-fluid py-5">
     <div class="container py-5">
-        <h1 class="mb-4">Billing details</h1>
         <form asp-action="CheckOut" asp-controller="Cart" method="post">
             <div class="row g-5">
                 <div class="col-md-12 col-lg-6 col-xl-7">
+                    <h1 class="mb-4">Billing details</h1>
                     <div class="row">
                         <div class="col-md-12 col-lg-6">
                             <div class="form-item w-100">
@@ -98,10 +92,11 @@
                         <label class="form-check-label" for="Paypal">Paypal</label>
                     </div>
 
-                    <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary mt-4">Place Order</button>
+                    
+                    <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary mt-4">Thanh toán</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
-<!-- Checkout Page End -->
+<!-- Cart Page End -->

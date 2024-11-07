@@ -12,8 +12,8 @@ using WebEcommerce.Data;
 namespace WebEcommerce.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241025121916_UpdateSupplierDate")]
-    partial class UpdateSupplierDate
+    [Migration("20241107022027_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -282,7 +282,13 @@ namespace WebEcommerce.Migrations
                     b.Property<DateTime?>("DeliveryDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
@@ -292,6 +298,9 @@ namespace WebEcommerce.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("RequiredDate")
@@ -310,32 +319,35 @@ namespace WebEcommerce.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("StatusId");
-
                     b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("WebEcommerce.Models.InvoiceDetail", b =>
                 {
-                    b.Property<int>("InvoiceId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<float?>("Discount")
                         .HasColumnType("real");
 
-                    b.Property<int>("InvoiceDetailId")
+                    b.Property<int>("InvoiceId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<float?>("UnitPrice")
-                        .HasColumnType("real");
+                    b.HasKey("Id");
 
-                    b.HasKey("InvoiceId", "ProductId");
+                    b.HasIndex("InvoiceId");
 
                     b.HasIndex("ProductId");
 
@@ -368,6 +380,12 @@ namespace WebEcommerce.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsRelated")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSale")
+                        .HasColumnType("bit");
+
                     b.Property<decimal?>("OriginalPrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -378,6 +396,9 @@ namespace WebEcommerce.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int");
 
                     b.Property<decimal?>("Sale")
                         .HasColumnType("decimal(18,2)");
@@ -401,25 +422,6 @@ namespace WebEcommerce.Migrations
                     b.HasIndex("SupplierId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("WebEcommerce.Models.Status", b =>
-                {
-                    b.Property<int>("StatusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StatusId"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StatusName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("StatusId");
-
-                    b.ToTable("Statuses");
                 });
 
             modelBuilder.Entity("WebEcommerce.Models.Supplier", b =>
@@ -465,7 +467,16 @@ namespace WebEcommerce.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Gender")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
@@ -531,15 +542,7 @@ namespace WebEcommerce.Migrations
                         .WithMany("Invoices")
                         .HasForeignKey("ApplicationUserId");
 
-                    b.HasOne("WebEcommerce.Models.Status", "Status")
-                        .WithMany("Invoices")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ApplicationUser");
-
-                    b.Navigation("Status");
                 });
 
             modelBuilder.Entity("WebEcommerce.Models.InvoiceDetail", b =>
@@ -593,11 +596,6 @@ namespace WebEcommerce.Migrations
             modelBuilder.Entity("WebEcommerce.Models.Product", b =>
                 {
                     b.Navigation("InvoiceDetails");
-                });
-
-            modelBuilder.Entity("WebEcommerce.Models.Status", b =>
-                {
-                    b.Navigation("Invoices");
                 });
 
             modelBuilder.Entity("WebEcommerce.Models.Supplier", b =>

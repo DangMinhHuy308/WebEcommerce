@@ -4,6 +4,8 @@ using WebEcommerce.ViewModels;
 using WebEcommerce.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using WebEcommerce.Models;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebEcommerce.Controllers
 {
@@ -23,7 +25,7 @@ namespace WebEcommerce.Controllers
         public IActionResult AddToCart(int id, int quantity = 1)
         {
             var cart = Cart;
-            var item = cart.SingleOrDefault(x => x.Id == id);
+            var item = cart.SingleOrDefault(x => x.ProductId == id);
             if (item == null)
             {
                 var product = _context.Products.Find(id);
@@ -31,7 +33,7 @@ namespace WebEcommerce.Controllers
                 {
                     cart.Add(new CartVM
                     {
-                        Id = product.ProductId,
+                        ProductId = product.ProductId,
                         Name = product.ProductName,
                         Image = product.Image,
                         Price = product.Price,
@@ -50,7 +52,7 @@ namespace WebEcommerce.Controllers
         public IActionResult RemoveToCart(int id)
         {
             var cart = Cart;
-            var item = cart.SingleOrDefault(x => x.Id == id);
+            var item = cart.SingleOrDefault(x => x.ProductId == id);
             if (item != null)
             {
 
@@ -77,44 +79,55 @@ namespace WebEcommerce.Controllers
        }
         [Authorize]
         [HttpPost]
-
         public IActionResult CheckOut(CheckoutVM vm)
         {
-            if (!ModelState.IsValid) { return View(vm); }
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
 
             var invoice = new Invoice
             {
+                ApplicationUserId = User.FindFirstValue(ClaimTypes.NameIdentifier), // Lấy ID người dùng
+                OrderDate = DateTime.Now,
                 FirstName = vm.FirstName,
                 LastName = vm.LastName,
-                Address = vm.Address,
-                Email = vm.Email,
                 PhoneNumber = vm.PhoneNumber,
-                OrderDate = vm.OrderDate,
+                Email = vm.Email,
+                Address = vm.Address,
+                PaymentMethod = "COD", 
+                ShippingMethod = "Fast", 
+                ShippingFee = 10.0f, 
+                StatusId = 1, 
                 Notes = vm.Notes,
-                PaymentMethod = vm.PaymentMethod,
-                ShippingMethod = vm.ShippingMethod,
-                StatusId = 0
-
             };
-            _context.Add(invoice);
-            _context.SaveChanges();
-            foreach (var i in Cart)
+
+            foreach (var item in Cart)
             {
                 var invoiceDetail = new InvoiceDetail
                 {
+                    ProductId = item.ProductId,
                     InvoiceId = invoice.InvoiceId,
-                    ProductId = i.Id,
-                    Quantity = i.Quantity,
-                    Price = i.Price
+                    Quantity = item.Quantity,
+                    Price = item.Price,
+
                 };
-                _context.InvoiceDetails.Add(invoiceDetail);
+
+                invoice.InvoiceDetails.Add(invoiceDetail);
             }
+
+            _context.Invoices.Add(invoice);
             _context.SaveChanges();
 
             Cart.Clear();
 
-            return RedirectToAction("OrderConfirmation", new {id = invoice.InvoiceId });
+            return RedirectToAction("Success");
         }
+        public IActionResult Success()
+        {
+            return View();
+        }
+
 
     }
 }

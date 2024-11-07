@@ -54,24 +54,28 @@ namespace WebEcommerce.Data
 				.WithMany(u => u.Invoices)
 				.HasForeignKey(i => i.ApplicationUserId);
 
-			// config the InvoiceDetail 
-			modelBuilder.Entity<InvoiceDetail>()
-				.HasKey(id => new { id.InvoiceId, id.ProductId }); 
+            modelBuilder.Entity<InvoiceDetail>()
+				.HasKey(id => id.Id); // Đặt InvoiceDetailId làm khóa chính
 
-			modelBuilder.Entity<InvoiceDetail>()
-				.HasOne(id => id.Invoice)
-				.WithMany(i => i.InvoiceDetails)
-				.HasForeignKey(id => id.InvoiceId);
+            modelBuilder.Entity<InvoiceDetail>()
+                .Property(id => id.Id)
+                .ValueGeneratedOnAdd(); // Tự động tăng cho InvoiceDetailId nếu là int hoặc Guid
 
+			// Thiết lập quan hệ với Invoice (InvoiceId là khóa ngoại)
+			modelBuilder.Entity<InvoiceDetail>()
+				 .HasOne(id => id.Invoice)
+				 .WithMany(i => i.InvoiceDetails);
+                 //.HasForeignKey(id => id.InvoiceId);
+
+			// Thiết lập quan hệ với Product (ProductId là khóa ngoại)
 			modelBuilder.Entity<InvoiceDetail>()
 				.HasOne(id => id.Product)
-				.WithMany(p => p.InvoiceDetails)
-				.HasForeignKey(id => id.ProductId);
+				.WithMany(p => p.InvoiceDetails);
+                //.HasForeignKey(id => id.ProductId);
 
-		
 
-			// config the Supplier 
-			modelBuilder.Entity<Supplier>()
+            // config the Supplier 
+            modelBuilder.Entity<Supplier>()
 				.HasKey(s => s.SupplierId); 
 
 			modelBuilder.Entity<Supplier>()
