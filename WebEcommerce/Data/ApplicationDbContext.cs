@@ -55,23 +55,22 @@ namespace WebEcommerce.Data
 				.HasForeignKey(i => i.ApplicationUserId);
 
             modelBuilder.Entity<InvoiceDetail>()
-				.HasKey(id => id.Id); // Đặt InvoiceDetailId làm khóa chính
+				.HasKey(id => id.Id); 
 
-            modelBuilder.Entity<InvoiceDetail>()
-                .Property(id => id.Id)
-                .ValueGeneratedOnAdd(); // Tự động tăng cho InvoiceDetailId nếu là int hoặc Guid
+            //modelBuilder.Entity<InvoiceDetail>()
+            //    .Property(id => id.Id)
+            //    .ValueGeneratedOnAdd(); 
 
 			// Thiết lập quan hệ với Invoice (InvoiceId là khóa ngoại)
 			modelBuilder.Entity<InvoiceDetail>()
 				 .HasOne(id => id.Invoice)
-				 .WithMany(i => i.InvoiceDetails);
-                 //.HasForeignKey(id => id.InvoiceId);
+				 .WithMany(i => i.InvoiceDetails)
+                 .HasForeignKey(id => id.InvoiceId);
 
-			// Thiết lập quan hệ với Product (ProductId là khóa ngoại)
 			modelBuilder.Entity<InvoiceDetail>()
 				.HasOne(id => id.Product)
-				.WithMany(p => p.InvoiceDetails);
-                //.HasForeignKey(id => id.ProductId);
+				.WithMany(p => p.InvoiceDetails)
+                .HasForeignKey(id => id.ProductId);
 
 
             // config the Supplier 

@@ -6,15 +6,18 @@ using Microsoft.AspNetCore.Authorization;
 using WebEcommerce.Models;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using WebEcommerce.Services;
 
 namespace WebEcommerce.Controllers
 {
     public class CartController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IVnPayService _vnPayService;
 
-        public CartController(ApplicationDbContext context) {
+        public CartController(ApplicationDbContext context, IVnPayService vnPayService) {
             _context = context;
+            _vnPayService = vnPayService;
         }
         const string CART_KEY = "MYCART";
         public List<CartVM> Cart => HttpContext.Session.Get<List<CartVM>>(MySetting.CART_KEY) ?? new List<CartVM>();
@@ -95,13 +98,24 @@ namespace WebEcommerce.Controllers
                 PhoneNumber = vm.PhoneNumber,
                 Email = vm.Email,
                 Address = vm.Address,
-                PaymentMethod = "COD", 
+                PaymentMethod = vm.PaymentMethod, 
                 ShippingMethod = "Fast", 
                 ShippingFee = 10.0f, 
                 StatusId = 1, 
                 Notes = vm.Notes,
             };
-
+            if (vm.PaymentMethod == "VNPay")
+            {
+                var vnPayModel = new VnPaymentRequestModel
+                {
+                    OrderId = new Random().Next(1000, 100000),
+                    FullName = $"{vm.FirstName} {vm.LastName}",
+                    Description = $"Thanh toán đơn hàng #{invoice.InvoiceId}",
+                    Amount = (double)(Cart.Sum(x => x.Price * x.Quantity) ?? 0),
+                    CreatedDate = DateTime.Now
+                };
+                return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
+            }
             foreach (var item in Cart)
             {
                 var invoiceDetail = new InvoiceDetail
@@ -119,7 +133,7 @@ namespace WebEcommerce.Controllers
             _context.Invoices.Add(invoice);
             _context.SaveChanges();
 
-            Cart.Clear();
+            ClearCart();
 
             return RedirectToAction("Success");
         }
@@ -127,7 +141,65 @@ namespace WebEcommerce.Controllers
         {
             return View();
         }
+        [Authorize]
+        public IActionResult PaymentCallBack()
+        {
+            var response = _vnPayService.PaymentExecute(Request.Query);
 
+            if (response == null || response.VnPayResponseCode != "00")
+            {
+                TempData["Message"] = $"Lỗi thanh toán VN Pay: {response.VnPayResponseCode}";
+                return RedirectToAction("PaymentFail");
+            }
+
+            // Create a new Invoice record
+            var invoice = new Invoice
+            {
+                ApplicationUserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                OrderDate = DateTime.Now,
+                FirstName = TempData["FirstName"] as string,
+                LastName = TempData["LastName"] as string,
+                PhoneNumber = TempData["PhoneNumber"] as string,
+                Email = TempData["Email"] as string,
+                Address = TempData["Address"] as string,
+                PaymentMethod = "VNPay",
+                ShippingMethod = "Fast",
+                ShippingFee = 10.0f,
+                StatusId = 1, // Adjust status if needed
+                Notes = TempData["Notes"] as string,
+            };
+
+            // Get cart items from the session and add each as InvoiceDetail
+            foreach (var item in Cart)
+            {
+                var invoiceDetail = new InvoiceDetail
+                {
+                    ProductId = item.ProductId,
+                    InvoiceId = invoice.InvoiceId,
+                    Quantity = item.Quantity,
+                    Price = item.Price,
+
+                };
+
+                invoice.InvoiceDetails.Add(invoiceDetail);
+            }
+
+            // Save invoice and details to database
+            _context.Invoices.Add(invoice);
+            _context.SaveChanges();
+
+            // Clear cart session after successful payment and save
+            HttpContext.Session.Remove(CART_KEY);
+
+            TempData["Message"] = $"Thanh toán VNPay thành công";
+            return RedirectToAction("Success");
+        }
+
+        [Authorize]
+        public IActionResult PaymentFail()
+        {
+            return View();
+        }
 
     }
 }

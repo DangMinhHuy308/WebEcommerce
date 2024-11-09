@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WebEcommerce.Data;
 using WebEcommerce.Helpers;
 using WebEcommerce.Models;
+using WebEcommerce.Services;
 using WebEcommerce.Utilies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +32,7 @@ builder.Services.AddSession(options =>
 	options.Cookie.HttpOnly = true;
 	options.Cookie.IsEssential = true;
 });
+builder.Services.AddSingleton<IVnPayService, VnPayService>();
 var app = builder.Build();
 DataSeeding();
 // Configure the HTTP request pipeline.
