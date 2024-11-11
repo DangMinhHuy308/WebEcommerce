@@ -24,7 +24,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
             _webHostEnvironment = webHostEnvironment;
             _notification = notyfService;
         }
-
+        // Hiển thị danh sách sản phẩm
         [Authorize(Roles = "Admin,Author")]
         [HttpGet]
         public async Task<IActionResult> Index(int? page)
@@ -51,23 +51,22 @@ namespace WebEcommerce.Areas.Admin.Controllers
             var pagedProductVM = listOfProductVM.ToPagedList(pageNum, pageSize);
             return View(pagedProductVM);
         }
-
+        // Thêm sản phẩm
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
 
-
             var vm = new CreateProductVM
             {
-                Categories = await _context.Categories.Select(c => new SelectListItem
+                Categories = await _context.Categories.Select(c => new SelectListItem // lấy thuộc Name tương ứng với id của Category
                 {
                     Value = c.CategoryId.ToString(),
                     Text = c.CategoryName
                 }).ToListAsync(),
 
-                Suppliers = await _context.Suppliers.Select(s => new SelectListItem
-                {
+                Suppliers = await _context.Suppliers.Select(s => new SelectListItem // lấy thuộc Name tương ứng với id  của Supplier
+				{
                     Value = s.SupplierId.ToString(),
                     Text = s.CompanyName
                 }).ToListAsync()
@@ -141,7 +140,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
 
             return View(vm);
         }
-
+        //Cập nhập sản phẩm
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
@@ -234,7 +233,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
             // Chuyển hướng sau khi cập nhật thành công
             return RedirectToAction("Index");
         }
-
+        // Xóa sản phẩm
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Delete(int id)

@@ -57,16 +57,21 @@ namespace WebEcommerce.Controllers
                 TempData["Message"] = $"Không thấy sản phẩm có mã {id}";
                 return Redirect("/404");
             }
-
-            var result = new ProductDetailVM
+			var relatedProducts = _context.Products
+		    .Where(x => x.CategoryId == product.CategoryId && x.ProductId != product.ProductId && x.IsRelated)
+		    .Take(5) // Giới hạn số lượng sản phẩm liên quan
+		    .ToList();
+			var result = new ProductDetailVM
             {
                 Id = product.ProductId,
                 Name = product.ProductName,
                 Price = product.Price,
                 Description = product.Description,
                 Image = product.Image,
-                CategoryName = product.Category?.CategoryName
-            };
+                CategoryName = product.Category?.CategoryName,
+
+				RelatedProducts = relatedProducts
+			};
 
             return View(result); 
         }

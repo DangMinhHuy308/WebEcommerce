@@ -27,6 +27,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
             _userManager = userManager;
             _notification = notyfService;
         }
+        // Hiển thị danh sách danh mục
         [Authorize(Roles = "Admin,Author")]
         [HttpGet]
         public async Task<IActionResult> Index(int? page)
@@ -49,7 +50,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
 
             return View(pagedCategoriesVM); 
         }
-        
+        // Tạo danh mục
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Create()
@@ -82,7 +83,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
             _notification.Success("Category created successfully");
             return RedirectToAction("Index");
         }
-        
+        // Cập nhập danh sách
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id) {
@@ -126,7 +127,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
             return RedirectToAction("Index");
 
         }
-        
+        //Xóa danh mục
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
@@ -143,6 +144,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
             _notification.Success("Delete successfully");
             return RedirectToAction("Index", "Category", new { area = "Admin" });
         }
+        // Hiẻn thị hình ảnh
         private string UploadImage(IFormFile file)
         {
             string uniqueFileName = "";

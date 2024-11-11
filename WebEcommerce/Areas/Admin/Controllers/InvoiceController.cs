@@ -86,7 +86,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
             return View(vm);
         }
         [Authorize(Roles = "Admin,Author")]
-        [HttpPost]
+        [HttpPost] 
         public async Task<IActionResult> Edit(InvoiceVM vm)
         {
             if (!ModelState.IsValid)
@@ -118,33 +118,33 @@ namespace WebEcommerce.Areas.Admin.Controllers
             return RedirectToAction("Index");
 
         }
-        // Xóa hóa đơn
-        //[Authorize(Roles = "Admin,Author")]
-        //[HttpPost]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    var invoice = await _context.Invoices
-        //        .Include(i => i.InvoiceDetails) // Include related InvoiceDetails
-        //        .FirstOrDefaultAsync(x => x.InvoiceId == id);
+       // Xóa hóa đơn
+       //[Authorize(Roles = "Admin,Author")]
+       //[HttpPost]
+       // public async Task<IActionResult> Delete(int id)
+       // {
+       //     var invoice = await _context.Invoices
+       //         .Include(i => i.InvoiceDetails) // Include related InvoiceDetails
+       //         .FirstOrDefaultAsync(x => x.InvoiceId == id);
 
-        //    if (invoice == null)
-        //    {
-        //        _notification.Error("Invoice not found");
-        //        return RedirectToAction("Index", "Invoice", new { area = "Admin" });
-        //    }
+       //     if (invoice == null)
+       //     {
+       //         _notification.Error("Invoice not found");
+       //         return RedirectToAction("Index", "Invoice", new { area = "Admin" });
+       //     }
 
-        //    // Remove related InvoiceDetails first
-        //    if (invoice.InvoiceDetails != null && invoice.InvoiceDetails.Any())
-        //    {
-        //        _context.InvoiceDetails.RemoveRange(invoice.InvoiceDetails);
-        //    }
+       //     // Remove related InvoiceDetails first
+       //     if (invoice.InvoiceDetails != null && invoice.InvoiceDetails.Any())
+       //     {
+       //         _context.InvoiceDetails.RemoveRange(invoice.InvoiceDetails);
+       //     }
 
-        //    _context.Invoices.Remove(invoice);
-        //    await _context.SaveChangesAsync();
+       //     _context.Invoices.Remove(invoice);
+       //     await _context.SaveChangesAsync();
 
-        //    _notification.Success("Delete successfully");
-        //    return RedirectToAction("Index");
-        //}
+       //     _notification.Success("Delete successfully");
+       //     return RedirectToAction("Index");
+       // }
         [Authorize(Roles = "Admin,Author")]
         [HttpGet]
         public async Task<IActionResult> Detail(int id)

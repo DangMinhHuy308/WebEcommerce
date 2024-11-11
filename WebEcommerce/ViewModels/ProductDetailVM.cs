@@ -1,4 +1,6 @@
-﻿namespace WebEcommerce.ViewModels
+﻿using WebEcommerce.Models;
+
+namespace WebEcommerce.ViewModels
 {
     public class ProductDetailVM
     {
@@ -11,5 +13,6 @@
         public string? Detail { get; set; }
         public int? Review { get; set; }
         public int? Count { get; set; }
-    }
+		public List<Product> RelatedProducts { get; set; }
+	}
 }
