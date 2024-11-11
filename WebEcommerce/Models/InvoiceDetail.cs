@@ -4,7 +4,6 @@ namespace WebEcommerce.Models
 {
     public class InvoiceDetail
     {
-        //public int InvoiceDetailId { get; set; } 
         public int Id { get; set; }
 
         public int InvoiceId { get; set; }

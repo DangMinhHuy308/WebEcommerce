@@ -1,0 +1,97 @@
+﻿@model WebEcommerce.ViewModels.InvoiceVM
+@{
+    ViewData["Title"] = "Edit Category";
+}
+<style>
+    #deliveryDate {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        font-size: 1rem;
+        color: #495057;
+        background-color: #fff;
+    }
+
+        #deliveryDate:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
+        }
+
+</style>
+<div class="container-fluid">
+    <a class="btn btn-primary mb-1" asp-action="Index" asp-controller="Invoice">Go Back</a>
+    <div class="card">
+        
+        <div class="card-body">
+            <form asp-action="Edit" asp-controller="Invoice" asp-area="Admin" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
+                
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <div class="mb-2">
+                            <label>Mã đơn hàng</label>
+                            <input type="text" asp-for="Code" class="form-control" />
+                            <span asp-validation-for="Code" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Họ</label>
+                            <input type="text" asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Tên</label>
+                            <input type="text" asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Số điện thoại</label>
+                            <input type="text" asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Email</label>
+                            <input type="text" asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Phương thức thanh toán</label>
+                            <input type="text" asp-for="PaymentMethod" class="form-control" />
+                            <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label for="deliveryDateTime">Ngày và thời gian vận chuyển</label>
+                            <input type="datetime-local" asp-for="DeliveryDate" id="deliveryDateTime" class="form-control" min="" />
+                            <span asp-validation-for="DeliveryDate" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label for="statusId">Tình trạng</label>
+                            <select asp-for="StatusId" class="form-control custom-select" id="statusId">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                            <span asp-validation-for="StatusId" class="text-danger"></span>
+                        </div>
+						
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <button type="submit" class="btn btn-primary w-100">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set minimum date and time to current date and time, preventing selection of past dates and times
+    const deliveryDateTimeInput = document.getElementById('deliveryDateTime');
+    const now = new Date();
+    const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    deliveryDateTimeInput.min = localDateTime;
+</script>

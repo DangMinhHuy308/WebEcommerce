@@ -2,10 +2,12 @@
 {
 	public class Invoice
 	{
-		public int InvoiceId { get; set; }
-		public string? ApplicationUserId { get; set; }
+        internal readonly object Product;
 
-		public DateTime? OrderDate { get; set; } = DateTime.Now;
+        public int InvoiceId { get; set; }
+		public string? ApplicationUserId { get; set; }
+        public string? Code { get; set; }
+        public DateTime? OrderDate { get; set; } = DateTime.Now;
 		public DateTime? RequiredDate { get; set; }
 		public DateTime? DeliveryDate { get; set; }
 		public string? LastName { get; set; }

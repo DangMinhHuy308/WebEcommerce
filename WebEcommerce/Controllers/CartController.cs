@@ -88,7 +88,7 @@ namespace WebEcommerce.Controllers
             {
                 return View(vm);
             }
-
+            Random rd = new Random();
             var invoice = new Invoice
             {
                 ApplicationUserId = User.FindFirstValue(ClaimTypes.NameIdentifier), // Lấy ID người dùng
@@ -103,6 +103,7 @@ namespace WebEcommerce.Controllers
                 ShippingFee = 10.0f, 
                 StatusId = 1, 
                 Notes = vm.Notes,
+                Code = "DH" + rd.Next(0, 9) + rd.Next(0, 9) + rd.Next(0, 9) + rd.Next(0, 9)
             };
             if (vm.PaymentMethod == "VNPay")
             {
@@ -169,7 +170,6 @@ namespace WebEcommerce.Controllers
                 Notes = TempData["Notes"] as string,
             };
 
-            // Get cart items from the session and add each as InvoiceDetail
             foreach (var item in Cart)
             {
                 var invoiceDetail = new InvoiceDetail
@@ -184,11 +184,9 @@ namespace WebEcommerce.Controllers
                 invoice.InvoiceDetails.Add(invoiceDetail);
             }
 
-            // Save invoice and details to database
             _context.Invoices.Add(invoice);
             _context.SaveChanges();
 
-            // Clear cart session after successful payment and save
             HttpContext.Session.Remove(CART_KEY);
 
             TempData["Message"] = $"Thanh toán VNPay thành công";

@@ -1,0 +1,85 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<WebEcommerce.ViewModels.InvoiceVM>
+@{
+    ViewData["Title"] = "Danh sách hóa đơn";
+}
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header bg-primary">
+            <h4 class="card-title text-white">Danh sách hóa đơn</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Mã đơn hàng</th>
+                        <th>Họ</th>
+                        <th>Tên</th>
+                        <th>Số điện thoại</th>
+                        <th>Email</th>
+                        <th>Phương thức thanh toán</th>
+                        <th>Ngày tạo</th>
+                        <th>Ngày vận chuyển</th>
+                        <th>Trạng thái</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var i in Model)
+                    {
+                        <tr>
+                            
+                            <td>@i.Code</td>
+                            <td>@i.FirstName</td>
+                            <td>@i.LastName</td>
+                            <td>@i.PhoneNumber</td>
+                            <td>@i.Email</td>
+                            <td>@i.PaymentMethod</td>
+                            <td>@i.OrderDate</td>
+                            <td>@i.DeliveryDate</td>
+                             <td>
+                                 @if (i.StatusId == 1)
+                                 {
+                                     <span>Chưa thanh toán</span>
+                                 }
+                                @if (i.StatusId == 2)
+                                 {
+                                     <span>Đã thanh toán</span>
+                                 }
+                                @if (i.StatusId == 3)
+                                 {
+                                     <span>Hoàn thành</span>
+                                 }
+                                @if (i.StatusId == 4)
+                                 {
+                                     <span>Hủy</span>
+                                 }
+                             </td>
+                            <td>
+                                <a class="btn btn-success btn-sm" asp-area="Admin" asp-controller="Invoice" asp-action="Detail" asp-route-id="@i.InvoiceDetailId">View</a>|
+
+                                <a class="btn btn-warning btn-sm" asp-area="Admin" asp-controller="Invoice" asp-action="Edit" asp-route-id="@i.Id">Edit</a>|
+                                <a class="btn btn-danger btn-sm" asp-area="Admin" asp-controller="Invoice" asp-action="Delete" asp-route-id="@i.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+            Page @(Model?.PageCount < Model?.PageNumber ? 0 : Model?.PageNumber) of @Model?.PageCount
+            @Html.PagedListPager(Model, page => Url.Action("Index",
+                     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }),
+                     new PagedListRenderOptions()
+            {
+                ContainerDivClasses = new List<string> { "invoice", "navigation" },
+                UlElementClasses = new List<string> { "pagination" },
+                LiElementClasses = new List<string> { "page-item", "page-link" },
+                ActiveLiElementClass = "active",
+
+            })
+        </div>
+    </div>
+</div>
