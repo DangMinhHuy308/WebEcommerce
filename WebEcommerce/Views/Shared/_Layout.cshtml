@@ -88,8 +88,8 @@
                             <ul class="dropdown-menu" aria-labelledby="userDropdown">
                                 @if (User.Identity.IsAuthenticated)
                                 {
-                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Profile</a></li>
-
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Thông tin tài khoản</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Invoice" asp-action="Tracking">Đơn mua</a></li>
                                     <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Logout</a></li>
                                 }
                                 else

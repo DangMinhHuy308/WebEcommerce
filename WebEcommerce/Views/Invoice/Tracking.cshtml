@@ -1,0 +1,55 @@
+﻿@model List<WebEcommerce.ViewModels.OrderTrackingVM>
+@{
+    ViewData["Title"] = "Đơn mua";
+    Layout = "_Layout";
+}
+<div class="container-fluid fruite py-5 mt-5">
+    <div class="container py-5">
+
+    <div class="card">
+        <div class="card-header bg-primary">
+            <h4 class="card-title text-white">Danh sách đơn mua</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped table-hover" id="myTable">
+                <thead>
+                    <tr class="text-dark">
+                        <th>Mã đơn hàng</th>
+                        <th>Ngày mua</th>
+                        <th>Ngày vận chuyển</th>
+                        <th>Tình trạng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var i in Model)
+                    {
+                        <tr>
+                            <td>@i.Code</td>
+                            <td>@i.OrderDate</td>
+                            <td>@i.DeliveryDate</td>
+                            <td>
+                                @if (i.StatusId == 1)
+                                {
+                                    <span>Chưa thanh toán</span>
+                                }
+                                @if (i.StatusId == 2)
+                                {
+                                    <span>Đã thanh toán</span>
+                                }
+                                @if (i.StatusId == 3)
+                                {
+                                    <span>Hoàn thành</span>
+                                }
+                                @if (i.StatusId == 4)
+                                {
+                                    <span>Hủy</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
