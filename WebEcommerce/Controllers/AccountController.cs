@@ -37,16 +37,18 @@ namespace WebEcommerce.Controllers
 			var user = await _userManager.GetUserAsync(User);
 			var vm = new ProfileVM
 			{
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                Address = user.Address,
-                Gender = user.Gender
-            };
+				FirstName = user.FirstName,
+				LastName = user.LastName,
+				Email = user.Email,
+				PhoneNumber = user.PhoneNumber,
+				Address = user.Address,
+				Gender = user.Gender,
+				Image = user.Image // Lấy đường dẫn ảnh từ user
+			};
 
-            return View(vm);
+			return View(vm);
 		}
+
 		[HttpPost]
 		public async Task<IActionResult> Profile(ProfileVM vm)
 		{
@@ -58,17 +60,20 @@ namespace WebEcommerce.Controllers
 			user.PhoneNumber = vm.PhoneNumber;
 			user.Address = vm.Address;
 			user.Gender = vm.Gender;
+
 			if (vm.Thumbnail != null)
 			{
-				user.Image = UploadImage(vm.Thumbnail);
+				user.Image = UploadImage(vm.Thumbnail); // Cập nhật đường dẫn ảnh
+				vm.Image = user.Image; // Đảm bảo view model có đường dẫn mới để hiển thị ngay
 			}
-			
-            _context.ApplicationUsers.Update(user);
-            await _context.SaveChangesAsync();
+
+			_context.ApplicationUsers.Update(user);
+			await _context.SaveChangesAsync();
 			_notification.Success("Profile updated successfully!");
-            return View(vm);
+			return View(vm);
 		}
-        [HttpGet]
+
+		[HttpGet]
         public IActionResult Register()
         {
 			return View(new RegisterVM());

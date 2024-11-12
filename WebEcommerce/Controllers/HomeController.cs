@@ -21,7 +21,7 @@ namespace WebEcommerce.Controllers
         {
             // tao ra 1 danh sach cac id danh muc lay tu csdl
             var categoryIdsToDisplay = new List<int> { 1, 2, 3 };
-
+            
             var categories = _context.Categories
                 .Where(c => categoryIdsToDisplay.Contains(c.CategoryId)) //loc cac danh muc chi lay nhung danh muc co id nam trong danh sach categoryIdsToDisplay
                 .Select(c => new CategoryWithProductVM
