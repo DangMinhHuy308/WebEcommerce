@@ -1,0 +1,17 @@
+﻿ @foreach (var i in Model.RelatedProducts)
+{
+ <div class="col-md-6 col-lg-4 col-xl-3">
+                                            <div class="rounded position-relative fruite-item">
+                                                <div class="fruite-img">
+                                                    <img src="~/thumbnails/@i.Image" class="img-fluid w-100 rounded-top" alt="">
+                                                </div>
+                                                <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                                    <h4>@i.ProductName</h4>
+                                                    <div class="d-flex justify-content-between flex-lg-wrap">
+                                                        <p class="text-dark fs-5 fw-bold mb-0">@WebEcommerce.Common.Common.FormatNumber(@Model.Price, 0)đ</p>
+                                                        <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+}

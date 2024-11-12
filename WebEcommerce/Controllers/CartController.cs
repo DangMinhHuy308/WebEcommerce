@@ -99,7 +99,7 @@ namespace WebEcommerce.Controllers
                 Email = vm.Email,
                 Address = vm.Address,
                 PaymentMethod = vm.PaymentMethod, 
-                ShippingMethod = "Fast", 
+                ShippingMethod = vm.ShippingMethod, 
                 ShippingFee = 10.0f, 
                 StatusId = 1, 
                 Notes = vm.Notes,
