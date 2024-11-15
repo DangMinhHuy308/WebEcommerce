@@ -14,10 +14,13 @@ namespace WebEcommerce.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IVnPayService _vnPayService;
+        private IEmailSender _emailSender;
 
-        public CartController(ApplicationDbContext context, IVnPayService vnPayService) {
+        public CartController(ApplicationDbContext context, IVnPayService vnPayService, IEmailSender emailSender) {
             _context = context;
             _vnPayService = vnPayService;
+            _emailSender = emailSender;
+
         }
         const string CART_KEY = "MYCART";
         public List<CartVM> Cart => HttpContext.Session.Get<List<CartVM>>(MySetting.CART_KEY) ?? new List<CartVM>();
@@ -82,8 +85,9 @@ namespace WebEcommerce.Controllers
        }
         [Authorize]
         [HttpPost]
-        public IActionResult CheckOut(CheckoutVM vm)
+        public async Task<IActionResult> CheckOut(CheckoutVM vm)
         {
+            var UserEmail = User.FindFirstValue(ClaimTypes.Email);
             if (!ModelState.IsValid)
             {
                 return View(vm);
@@ -130,12 +134,13 @@ namespace WebEcommerce.Controllers
 
                 invoice.InvoiceDetails.Add(invoiceDetail);
             }
-
+            var receiver = UserEmail;
+            var subject = "Đặt hàng thành công";
+            var message ="Đặt hàng thành công";
+            await _emailSender.SendEmailAsync(receiver, subject, message);
             _context.Invoices.Add(invoice);
             _context.SaveChanges();
-
             ClearCart();
-
             return RedirectToAction("Success");
         }
         public IActionResult Success()

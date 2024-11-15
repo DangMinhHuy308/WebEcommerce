@@ -13,7 +13,9 @@ namespace WebEcommerce.Data
 		public DbSet<Invoice>? Invoices { get; set; }
 		public DbSet<InvoiceDetail>? InvoiceDetails { get; set; }
 		public DbSet<Supplier>? Suppliers { get; set; }
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+        public DbSet<Message>? Messages { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
 
@@ -36,7 +38,7 @@ namespace WebEcommerce.Data
             modelBuilder.Entity<Product>()
                 .Property(p => p.Sale)
                 .HasColumnType("decimal(18,2)"); 
-                                                 // config the Category 
+			// config the Category 
             modelBuilder.Entity<Category>()
 				.HasKey(c => c.CategoryId); 
 
@@ -55,14 +57,12 @@ namespace WebEcommerce.Data
 				.HasForeignKey(i => i.ApplicationUserId);
 
             modelBuilder.Entity<InvoiceDetail>()
-				.HasKey(id => id.Id); 
+				.HasKey(id => id.Id);
 
-            //modelBuilder.Entity<InvoiceDetail>()
-            //    .Property(id => id.Id)
-            //    .ValueGeneratedOnAdd(); 
 
-			// Thiết lập quan hệ với Invoice (InvoiceId là khóa ngoại)
-			modelBuilder.Entity<InvoiceDetail>()
+
+            // config the Invoice Detail
+            modelBuilder.Entity<InvoiceDetail>()
 				 .HasOne(id => id.Invoice)
 				 .WithMany(i => i.InvoiceDetails)
                  .HasForeignKey(id => id.InvoiceId);
@@ -81,7 +81,19 @@ namespace WebEcommerce.Data
 				.Property(s => s.CompanyName)
 				.IsRequired()
 				.HasMaxLength(100);
-		}
+			//config the Message
+            modelBuilder.Entity<Message>()
+				.HasOne(m => m.FromUser)
+				.WithMany(u => u.SentMessages)
+				.HasForeignKey(m => m.FromUserId)
+				.OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Message>()	
+                .HasOne(m => m.ToUser)
+                .WithMany(u => u.ReceivedMessages)
+                .HasForeignKey(m => m.ToUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
 	}
 
 

@@ -68,7 +68,7 @@ namespace WebEcommerce.Areas.Admin.Controllers
             }
 			await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, vm.RememberMe, true);
 			_notification.Success("Login Successful");
-            return RedirectToAction("Index","User", new{area ="Admin" });
+            return RedirectToAction("Index","Product", new{area ="Admin" });
         }
         [HttpGet]
         public IActionResult register()

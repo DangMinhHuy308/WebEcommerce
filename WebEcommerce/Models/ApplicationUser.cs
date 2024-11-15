@@ -13,5 +13,10 @@ namespace WebEcommerce.Models
 
         // Navigation Properties
         public virtual ICollection<Invoice> Invoices { get; set; }
-	}
+        // Các tin nhắn người dùng gửi
+        public virtual ICollection<Message> SentMessages { get; set; }
+
+        // Các tin nhắn người dùng nhận
+        public virtual ICollection<Message> ReceivedMessages { get; set; }
+    }
 }

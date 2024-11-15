@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebEcommerce.Data;
 using WebEcommerce.Helpers;
+using WebEcommerce.Hubs;
 using WebEcommerce.Models;
 using WebEcommerce.Services;
 using WebEcommerce.Utilies;
@@ -19,20 +20,21 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
-	options.LoginPath = "/admin/login";
     options.LoginPath = "/Account/Login";
     options.LoginPath = "/AccessDenied";
 
 });
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-	options.IdleTimeout = TimeSpan.FromSeconds(10);
+	options.IdleTimeout = TimeSpan.FromSeconds(30);
 	options.Cookie.HttpOnly = true;
 	options.Cookie.IsEssential = true;
 });
 builder.Services.AddSingleton<IVnPayService, VnPayService>();
+builder.Services.AddSignalR();
 var app = builder.Build();
 DataSeeding();
 // Configure the HTTP request pipeline.
@@ -56,7 +58,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
+app.MapHub<ChatHub>("/chatHub");
 app.Run();
 void DataSeeding()
 {

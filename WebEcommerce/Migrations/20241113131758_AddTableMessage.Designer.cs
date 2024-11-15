@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebEcommerce.Data;
 
@@ -11,9 +12,11 @@ using WebEcommerce.Data;
 namespace WebEcommerce.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241113131758_AddTableMessage")]
+    partial class AddTableMessage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -365,14 +368,8 @@ namespace WebEcommerce.Migrations
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("FromUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("MessageContent")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ToUserId")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
@@ -383,10 +380,6 @@ namespace WebEcommerce.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("FromUserId");
-
-                    b.HasIndex("ToUserId");
 
                     b.ToTable("Messages");
                 });
@@ -604,24 +597,10 @@ namespace WebEcommerce.Migrations
             modelBuilder.Entity("WebEcommerce.Models.Message", b =>
                 {
                     b.HasOne("WebEcommerce.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
+                        .WithMany("Messages")
                         .HasForeignKey("ApplicationUserId");
 
-                    b.HasOne("WebEcommerce.Models.ApplicationUser", "FromUser")
-                        .WithMany("SentMessages")
-                        .HasForeignKey("FromUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("WebEcommerce.Models.ApplicationUser", "ToUser")
-                        .WithMany("ReceivedMessages")
-                        .HasForeignKey("ToUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("ApplicationUser");
-
-                    b.Navigation("FromUser");
-
-                    b.Navigation("ToUser");
                 });
 
             modelBuilder.Entity("WebEcommerce.Models.Product", b =>
@@ -667,9 +646,7 @@ namespace WebEcommerce.Migrations
                 {
                     b.Navigation("Invoices");
 
-                    b.Navigation("ReceivedMessages");
-
-                    b.Navigation("SentMessages");
+                    b.Navigation("Messages");
                 });
 #pragma warning restore 612, 618
         }

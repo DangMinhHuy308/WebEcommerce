@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using WebEcommerce.Data;
 using WebEcommerce.ViewModels;
+using X.PagedList.Extensions;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebEcommerce.Controllers
@@ -14,8 +15,10 @@ namespace WebEcommerce.Controllers
         {
             _context = context;
         }
-        public IActionResult Index(int? id)
+        public IActionResult Index(int? id, int? page)
         {
+            int pageSize = 5;
+            int pageNum = page ?? 1;
             var product = _context.Products.AsQueryable();
             if (id.HasValue) { 
                 product = product.Where(x => x.CategoryId == id.Value);
@@ -28,7 +31,10 @@ namespace WebEcommerce.Controllers
                 Description = x.Description,
                 Image = x.Image
             });
-            return View(result);
+            // Thực hiện phân trang
+            var pagedProductVM = result.ToPagedList(pageNum, pageSize);
+
+            return View(pagedProductVM);
         }
         public IActionResult Search(string? query)
         {
