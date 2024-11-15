@@ -9,7 +9,7 @@ namespace WebEcommerce.Models
         public string Name { get; set; }
         public string? Description { get; set; }
         public DateTime DateStart { get; set; } = DateTime.Now;
-        public DateTime DateEnd { get; set; }
+        public DateTime DateEnd { get; set; } =DateTime.Now;
         public int Status { get; set; }
         public int Quantity{ get; set; }
         public decimal? Price { get; set; }

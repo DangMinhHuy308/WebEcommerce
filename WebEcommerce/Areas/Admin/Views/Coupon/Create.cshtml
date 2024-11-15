@@ -1,0 +1,73 @@
+﻿@model WebEcommerce.ViewModels.CouponVM
+@{
+    ViewData["Title"] = "Thêm mã giảm giá";
+}
+
+<div class="container-fluid">
+    <a class="btn btn-primary mb-1" asp-action="Index" asp-controller="Coupon">Go Back</a>
+    <div class="card">
+        <div class="card-header bg-primary">
+            <h4 class="card-title text-white">Thêm mã giảm giá</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" asp-controller="Coupon" asp-area="Admin" enctype="multipart/form-data">
+
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <div class="mb-2">
+                            <label>Tên</label>
+                            <input type="text" asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Description</label>
+                            <input id="richEditor" type="text" asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Price</label>
+                            <input type="number" asp-for="Price" class="form-control" step="0.01" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Số lượng</label>
+                            <input type="number" asp-for="Quantity" class="form-control"  />
+                            <span asp-validation-for="Quantity" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label for="deliveryDateTime">Ngày thêm mã</label>
+                            <input type="datetime-local" asp-for="DateStart" id="deliveryDateTime" class="form-control" min="" />
+                            <span asp-validation-for="DateStart" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label for="deliveryDateTime">Ngày hạn</label>
+                            <input type="datetime-local" asp-for="DateEnd" id="deliveryDateTime" class="form-control" min="" />
+                            <span asp-validation-for="DateEnd" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label for="statusId">Tình trạng</label>
+                            <select asp-for="Status" class="form-control custom-select" id="status">
+                                <option value="1">Hiển thị</option>
+                                <option value="2">Hết hạn</option>
+                                
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="mb-2">
+                    <button type="submit" class="btn btn-primary w-100">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const deliveryDateTimeInput = document.getElementById('deliveryDateTime');
+    const now = new Date();
+    const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    deliveryDateTimeInput.min = localDateTime;
+</script>
