@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebEcommerce.Data;
 
@@ -11,9 +12,11 @@ using WebEcommerce.Data;
 namespace WebEcommerce.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241115111137_Droptable")]
+    partial class Droptable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,41 +265,6 @@ namespace WebEcommerce.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("WebEcommerce.Models.Coupon", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DateEnd")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateStart")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Coupons");
-                });
-
             modelBuilder.Entity("WebEcommerce.Models.Invoice", b =>
                 {
                     b.Property<int>("InvoiceId")
@@ -313,9 +281,6 @@ namespace WebEcommerce.Migrations
 
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("CouponId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DeliveryDate")
                         .HasColumnType("datetime2");
@@ -356,8 +321,6 @@ namespace WebEcommerce.Migrations
                     b.HasKey("InvoiceId");
 
                     b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("CouponId");
 
                     b.ToTable("Invoices");
                 });
@@ -619,13 +582,7 @@ namespace WebEcommerce.Migrations
                         .WithMany("Invoices")
                         .HasForeignKey("ApplicationUserId");
 
-                    b.HasOne("WebEcommerce.Models.Coupon", "Coupon")
-                        .WithMany("Invoices")
-                        .HasForeignKey("CouponId");
-
                     b.Navigation("ApplicationUser");
-
-                    b.Navigation("Coupon");
                 });
 
             modelBuilder.Entity("WebEcommerce.Models.InvoiceDetail", b =>
@@ -692,11 +649,6 @@ namespace WebEcommerce.Migrations
             modelBuilder.Entity("WebEcommerce.Models.Category", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("WebEcommerce.Models.Coupon", b =>
-                {
-                    b.Navigation("Invoices");
                 });
 
             modelBuilder.Entity("WebEcommerce.Models.Invoice", b =>

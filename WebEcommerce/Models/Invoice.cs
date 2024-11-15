@@ -2,8 +2,6 @@
 {
 	public class Invoice
 	{
-        internal readonly object Product;
-
         public int InvoiceId { get; set; }
 		public string? ApplicationUserId { get; set; }
         public string? Code { get; set; }
@@ -21,8 +19,9 @@
 		public float? ShippingFee { get; set; }
 		public int StatusId { get; set; }
 		public string? Notes { get; set; }
-		
-		public virtual ApplicationUser ApplicationUser { get; set; }
+        public int? CouponId { get; set; } 
+        public Coupon Coupon { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
         public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; } = new List<InvoiceDetail>();
     }
 }

@@ -148,7 +148,7 @@ namespace WebEcommerce.Controllers
             return View();
         }
         [Authorize]
-        public IActionResult PaymentCallBack()
+        public IActionResult PaymentCallBack(CheckoutVM vm)
         {
             var response = _vnPayService.PaymentExecute(Request.Query);
 
@@ -157,25 +157,25 @@ namespace WebEcommerce.Controllers
                 TempData["Message"] = $"Lỗi thanh toán VN Pay: {response.VnPayResponseCode}";
                 return RedirectToAction("PaymentFail");
             }
-
-            // Create a new Invoice record
+            // Tạo một bản ghi Invoice mới
             var invoice = new Invoice
             {
                 ApplicationUserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
                 OrderDate = DateTime.Now,
-                FirstName = TempData["FirstName"] as string,
-                LastName = TempData["LastName"] as string,
-                PhoneNumber = TempData["PhoneNumber"] as string,
-                Email = TempData["Email"] as string,
-                Address = TempData["Address"] as string,
-                PaymentMethod = "VNPay",
-                ShippingMethod = "Fast",
-                ShippingFee = 10.0f,
-                StatusId = 1, // Adjust status if needed
-                Notes = TempData["Notes"] as string,
+                FirstName = vm.FirstName,
+                LastName = vm.LastName,
+                PhoneNumber = vm.PhoneNumber,
+                Email = vm.Email,
+                Address = vm.Address,
+                PaymentMethod = "VNPay", 
+                ShippingMethod = "Fast", 
+                ShippingFee = 10.0f, 
+                StatusId = 1, 
+                Notes = vm.Notes, 
+                Code = "DH" + new Random().Next(1000, 9999)
             };
 
-            foreach (var item in Cart)
+           foreach (var item in Cart)
             {
                 var invoiceDetail = new InvoiceDetail
                 {
@@ -188,10 +188,10 @@ namespace WebEcommerce.Controllers
 
                 invoice.InvoiceDetails.Add(invoiceDetail);
             }
-
             _context.Invoices.Add(invoice);
-            _context.SaveChanges();
+            _context.SaveChanges(); 
 
+           
             HttpContext.Session.Remove(CART_KEY);
 
             TempData["Message"] = $"Thanh toán VNPay thành công";
