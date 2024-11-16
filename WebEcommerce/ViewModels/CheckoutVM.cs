@@ -4,6 +4,7 @@ namespace WebEcommerce.ViewModels
 {
     public class CheckoutVM
     {
+        public int CouponId { get; set; }
         public string? FirstName { get; set; }
 
         public string? LastName { get; set; }

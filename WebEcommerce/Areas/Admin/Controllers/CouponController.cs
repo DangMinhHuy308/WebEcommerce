@@ -15,19 +15,23 @@ namespace WebEcommerce.Areas.Admin.Controllers
         private readonly ApplicationDbContext _context;
         private readonly INotyfService _notification;
         private readonly IWebHostEnvironment _webHostEnvironment;
+
         public CouponController(ApplicationDbContext context,INotyfService notyfService, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _notification = notyfService;
             _webHostEnvironment = webHostEnvironment;
         }
+
+        // Hiển thị danh sách mã giảm giá
         [Authorize(Roles = "Admin,Author")]
         [HttpGet]
-
         public async Task<IActionResult> Index(int? page)
         {
             int pageSize = 5;
             int pageNum = page ?? 1;
+
+            // lấy toàn bộ mã giảm giá trong cơ sở dữ liệu
             var coupons = await _context.Coupons.ToListAsync();
             var listOfCouponVM = coupons.Select(x => new CouponVM()
             {
@@ -40,25 +44,31 @@ namespace WebEcommerce.Areas.Admin.Controllers
                 Price = x.Price,
                 Status = x.Status
             });
-            var pagedCouponVM= listOfCouponVM.ToPagedList(pageNum, pageSize);
 
+            var pagedCouponVM= listOfCouponVM.ToPagedList(pageNum, pageSize);
             return View(pagedCouponVM);
         }
-        [Authorize(Roles = "Admin")]
 
+        // Thêm mã giảm giá mới (hiển thị form)
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Create()
         {
             return View(new CouponVM());
         }
+
+        // Xử lý tạo mã giảm giá (lưu vào csdl)
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(CouponVM vm)
         {
+            // Kiểm tra tính hợp lệ của dữ liệu
             if (!ModelState.IsValid)
             {
                 return View(vm);
             }
+
+            // Tạo một đối tượng Coupon mới từ dữ liệu
             var coupon = new Coupon()
             {
                 Name = vm.Name,
@@ -69,21 +79,28 @@ namespace WebEcommerce.Areas.Admin.Controllers
                 Price = vm.Price,
                 Status = vm.Status
             };
+
+            // Lưu coupon vào csdl
             await _context.Coupons.AddAsync(coupon);
             await _context.SaveChangesAsync();
             _notification.Success("Coupon created successfully");
             return RedirectToAction("Index");
         }
+
+        // Cập nhập mã giảm giá (hiển thị form)
         [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+            // Tìm mã giảm giá theo id đã lưu trong csdl
             var coupon = await _context.Coupons.FirstOrDefaultAsync(x => x.Id == id);
             if (coupon == null)
             {
                 _notification.Error("coupon not found");
                 return View();
             }
+
+            // Hiển thị view với các thuộc tính bên dưới
             var vm = new CouponVM()
             {
                 Id = coupon.Id,
@@ -94,22 +111,30 @@ namespace WebEcommerce.Areas.Admin.Controllers
                 Price = coupon.Price,
                 Status = coupon.Status
             };
+
             return View(vm);
         }
+
+        // Xử lý cập nhật mã giảm giá
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit(CouponVM vm)
         {
+            // Kiểm tra tính hợp lệ của dữ liệu
             if (!ModelState.IsValid)
             {
                 return View(vm);
             }
+
+            // Tìm mã giảm giá theo ID 
             var coupon = await _context.Coupons.FirstOrDefaultAsync(x => x.Id == vm.Id);
             if (coupon == null)
             {
                 _notification.Error("coupon not found");
                 return View(vm);
             }
+
+            // Cập nhật các thuộc tính của coupon
             coupon.Name = vm.Name;
             coupon.Description = vm.Description;
             coupon.Price = vm.Price;
@@ -119,19 +144,18 @@ namespace WebEcommerce.Areas.Admin.Controllers
             coupon.DateStart = vm.DateStart;
             coupon.DateEnd = vm.DateEnd;
 
+            //  Cập nhật coupon trong cơ sở dữ liệu
             _context.Coupons.Update(coupon);
             await _context.SaveChangesAsync();
             _notification.Success("Edit successfully");
             return RedirectToAction("Index");
-
         }
 
-         [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
-
-
+            // Tìm mã giảm giá theo id
             var coupon = await _context.Coupons.FirstOrDefaultAsync(x => x.Id == id);
             if (coupon == null)
             {
@@ -139,10 +163,9 @@ namespace WebEcommerce.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Delete the coupon
+            // Xóa mã giảm giá khỏi csdl
             _context.Coupons.Remove(coupon);
             await _context.SaveChangesAsync();
-
             _notification.Success("Coupon deleted successfully");
             return RedirectToAction("Index");
         }

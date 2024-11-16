@@ -7,6 +7,7 @@
         public string Name { get; set; }
         public string? Image { get; set; }
         public int? Quantity { get; set; }
+        public string? CouponCode { get; set; }
         public decimal? Price { get; set; }
         public decimal? TotalPrice => Quantity * Price;
     }

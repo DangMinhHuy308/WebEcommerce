@@ -19,8 +19,8 @@ namespace WebEcommerce.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 		private readonly IWebHostEnvironment _webHostEnvironment;
-
-		public AccountController(UserManager<ApplicationUser> userManager,
+        // Constructor để khởi tạo cấu hình cho class
+        public AccountController(UserManager<ApplicationUser> userManager,
                                     SignInManager<ApplicationUser> signInManager,
                                     INotyfService notyfService, ApplicationDbContext context, IMapper mapper,IWebHostEnvironment webHostEnvironment)
         {
@@ -31,10 +31,12 @@ namespace WebEcommerce.Controllers
             _mapper = mapper;
 			_webHostEnvironment = webHostEnvironment;	
         }
-		[HttpGet]
+        // Hiển thị thông tin người dùng
+        [HttpGet]
 		public async Task<IActionResult> Profile()
 		{
-			var user = await _userManager.GetUserAsync(User);
+            // Lấy thông tin người dùng hiện tại
+            var user = await _userManager.GetUserAsync(User);
 			var vm = new ProfileVM
 			{
 				FirstName = user.FirstName,
@@ -43,18 +45,21 @@ namespace WebEcommerce.Controllers
 				PhoneNumber = user.PhoneNumber,
 				Address = user.Address,
 				Gender = user.Gender,
-				Image = user.Image // Lấy đường dẫn ảnh từ user
+				Image = user.Image 
 			};
 
 			return View(vm);
 		}
-
-		[HttpPost]
+        // Cập nhật hồ sơ người dùng
+        [HttpPost]
 		public async Task<IActionResult> Profile(ProfileVM vm)
 		{
-			if (!ModelState.IsValid) { return View(vm); }
-			var user = await _userManager.GetUserAsync(User);
-			user.FirstName = vm.FirstName;
+            // Kiểm tra tính hợp lệ của dữ liệu
+            if (!ModelState.IsValid) { return View(vm); }
+            // Lấy thông tin người dùng hiện tại
+            var user = await _userManager.GetUserAsync(User);
+            // Cập nhật thông tin người dùng
+            user.FirstName = vm.FirstName;
 			user.LastName = vm.LastName;
 			user.Email = vm.Email;
 			user.PhoneNumber = vm.PhoneNumber;
@@ -63,8 +68,8 @@ namespace WebEcommerce.Controllers
 
 			if (vm.Thumbnail != null)
 			{
-				user.Image = UploadImage(vm.Thumbnail); // Cập nhật đường dẫn ảnh
-				vm.Image = user.Image; // Đảm bảo view model có đường dẫn mới để hiển thị ngay
+				user.Image = UploadImage(vm.Thumbnail); 
+				vm.Image = user.Image;
 			}
 
 			_context.ApplicationUsers.Update(user);
@@ -72,30 +77,34 @@ namespace WebEcommerce.Controllers
 			_notification.Success("Profile updated successfully!");
 			return View(vm);
 		}
-
-		[HttpGet]
+        // Hiển thị trang đăng ký
+        [HttpGet]
         public IActionResult Register()
         {
 			return View(new RegisterVM());
 		}
+        // Xử lý đăng ký người dùng
         [HttpPost]
         public async Task <IActionResult> Register(RegisterVM vm)
         {
-			if (!ModelState.IsValid) { return View(vm); }
-			var checkUserByEmail = await _userManager.FindByEmailAsync(vm.Email);
+			// Kiểm tra tính hợp lệ của dữ liệu
+            if (!ModelState.IsValid) { return View(vm); }
+            // Kiểm tra email đã tồn tại chưa
+            var checkUserByEmail = await _userManager.FindByEmailAsync(vm.Email);
 			if (checkUserByEmail != null)
 			{
 				_notification.Error("Email already exists");
 				return View(vm);
 			}
-			var checkUserByUsername = await _userManager.FindByNameAsync(vm.UserName);
+            // Kiểm tra tên người dùng đã tồn tại chưa
+            var checkUserByUsername = await _userManager.FindByNameAsync(vm.UserName);
 			if (checkUserByUsername != null)
 			{
 				_notification.Error("Username already exists");
 				return View(vm);
 			}
-
-			var applicationUser = new ApplicationUser()
+            // Tạo đối tượng user mới
+            var applicationUser = new ApplicationUser()
 			{
 				Email = vm.Email,
 				UserName = vm.UserName,
@@ -105,7 +114,8 @@ namespace WebEcommerce.Controllers
 				Address = vm.Address,
 				Gender = vm.Gender,
 			};
-			if (vm.Thumbnail != null)
+            // Kiểm tra xem có ảnh đại diện không
+            if (vm.Thumbnail != null)
 			{
 				applicationUser.Image = UploadImage(vm.Thumbnail);
 			}
@@ -130,41 +140,50 @@ namespace WebEcommerce.Controllers
 			}
 			return View(vm);
 		}
+		// Hiển thị trang đăng nhập
 		[HttpGet]
 		public IActionResult Login()
 		{
+			// kiểm tra người dùng đã đăng nhập chưa
 			if (!HttpContext.User.Identity!.IsAuthenticated)
 			{
 				return View(new LoginVM());
 			}
 			return RedirectToAction("Index", "Home");
 		}
+		// Xư lí đăng nhập
 		[HttpPost]
 		public async Task<IActionResult> Login(LoginVM vm)
 		{
-			if (!ModelState.IsValid) { return View(vm); }
+            // Kiểm tra tính hợp lệ của dữ liệu
+            if (!ModelState.IsValid) { return View(vm); }
+			// Kiểm tra sự tồn tại của tài khoản nếu không có thì thông báo không tồn tại tài khoản
 			var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == vm.Username);
 			if (existingUser == null)
 			{
 				_notification.Error("Username does not exist");
 				return View(vm);
 			}
+			// Kiểm tra mật khẩu của tài khoản 
 			var verifyPassword = await _userManager.CheckPasswordAsync(existingUser, vm.Password);
 			if (!verifyPassword)
 			{
 				_notification.Error("Password does not exist");
 				return View(vm);
 			}
+			// Đăng nhập người dùng
 			await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, vm.RememberMe, true);
 			_notification.Success("Login Successful");
 			return RedirectToAction("Index", "Home");
 		}
+        // Đăng xuất tài khoản
         public IActionResult Logout()
         {
             _signInManager.SignOutAsync();
             _notification.Success("Logout successfull");
             return RedirectToAction("Index", "Home");
         }
+		// Upload hình ảnh
         private string UploadImage(IFormFile file)
 		{
 			string uniqueFileName = "";
