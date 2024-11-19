@@ -16,6 +16,8 @@ namespace WebEcommerce.ViewModels
         public string? PaymentMethod { get; set; }
         public string? ShippingMethod { get; set; }
         public DateTime OrderDate { get; set; }
+        public DateTime ShippingDate { get; set; } = DateTime.Now.AddDays(3);
+
 
     }
 }

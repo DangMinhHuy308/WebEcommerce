@@ -127,6 +127,7 @@ namespace WebEcommerce.Controllers
                 Address = vm.Address,
                 PaymentMethod = vm.PaymentMethod, 
                 ShippingMethod = vm.ShippingMethod, 
+                RequiredDate = DateTime.Now.AddDays(3),
                 ShippingFee = 10.0f, 
                 StatusId = 1, 
                 Notes = vm.Notes,

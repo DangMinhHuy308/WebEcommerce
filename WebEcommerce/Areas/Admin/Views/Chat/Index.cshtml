@@ -1,100 +1,26 @@
-﻿@* @model WebEcommerce.ViewModels.ChatVM
-
+﻿@page
 <div class="container">
-    <div class="row clearfix">
-        <div class="col-lg-12">
-            <div class="card chat-app">
-                <!-- Danh sách người dùng -->
-                <div id="plist" class="people-list">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-search"></i></span>
-                        </div>
-                        <input type="text" class="form-control" placeholder="Search...">
-                    </div>
-                    <ul class="list-unstyled chat-list mt-2 mb-0">
-                        @foreach (var user in Model.Users)
-
-                        {
-                            <li class="clearfix" data-user-id="@user.Id" onclick="loadChat('@user.Id')">
-                                <img src="~/thumbnails/@user.Image" alt="avatar" class="avatar">
-                                <div class="about">
-                                    <div class="name">@user.UserName</div>
-                                    <div class="status">
-                                        <i class="fa fa-circle @(user.IsOnline ? "online" : "offline")"></i>
-                                        @(user.IsOnline ? "online" : $"Last seen: {user.LastSeen?.ToString("MMM d, hh:mm tt")}")
-                                    </div>
-                                </div>
-                            </li>
-                        }
-                    </ul>
-                </div>
-
-                <!-- Khung chat -->
-                <div class="chat">
-                    <div class="chat-header clearfix">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <img src="~/thumbnails/@Model.FromUserImage" alt="avatar" class="avatar">
-                                <div class="chat-about">
-                                    <h6 class="m-b-0">@Model.ToUserName</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chat-history">
-                        <ul id="messagesList" class="m-b-0">
-                            @foreach (var message in Model.Messages)
-
-                            {
-                                <div class="chat-header clearfix">
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <img id="chatHeaderUserImage" src="~/thumbnails/@Model.FromUserImage" alt="avatar" class="avatar">
-                                            <div class="chat-about">
-                                                <h6 class="m-b-0" id="chatHeaderUserName">@Model.ToUserName</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            }
-                        </ul>
-                    </div>
-                    <div class="chat-message clearfix">
-                        <div class="input-group mb-0">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fa fa-send"></i></span>
-                            </div>
-                            <input id="messageInput" type="text" class="form-control" placeholder="Enter text here...">
-                        </div>
-                        <button id="sendButton" class="btn btn-primary">Send</button>
-                    </div>
-                </div>
-            </div>
+    <div class="row p-1">
+        <div class="col-1">User</div>
+        <div class="col-5"><input type="text" id="userInput" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-1">Message</div>
+        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6 text-end">
+            <input type="button" id="sendButton" value="Send Message" />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <hr />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <ul id="messagesList"></ul>
         </div>
     </div>
 </div>
-
-
-<script>
-    function loadChat(userId) {
-        // Gửi yêu cầu đến server để lấy tin nhắn của userId
-        $.ajax({
-            url: '/Chat/GetMessages',
-            method: 'GET',
-            data: { userId: userId },
-            success: function (data) {
-                // Cập nhật nội dung khung chat
-                $('#messagesList').html(data.messagesHtml);
-                $('#chatHeaderUserName').text(data.userName);
-                $('#chatHeaderUserImage').attr('src', '/thumbnails/' + data.userImage);
-            },
-            error: function (err) {
-                console.error('Error loading chat:', err);
-            }
-        });
-    }
-
-
-</script> *@

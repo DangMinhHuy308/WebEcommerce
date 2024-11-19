@@ -69,10 +69,10 @@ namespace WebEcommerce.Areas.Admin.Controllers
             return View(vm);
 */          return View();
         }
-        [HttpGet]
+       /* [HttpGet]
         public IActionResult GetMessages(string userId)
         {
-            /*var currentUserId = _userManager.GetUserId(User);
+            *//*var currentUserId = _userManager.GetUserId(User);
 
             // Lấy tin nhắn giữa currentUserId và userId
             var messages = _context.Messages
@@ -101,10 +101,10 @@ namespace WebEcommerce.Areas.Admin.Controllers
                 messagesHtml = RenderMessagesHtml(messages),
                 userName = $"{user.FirstName} {user.LastName}",
                 userImage = user.Image
-            });*/
+            });*//*
             return View();
         }
-        /*private string RenderMessagesHtml(List<MessageBox> messages)
+        *//*private string RenderMessagesHtml(List<MessageBox> messages)
         {
             var sb = new StringBuilder();
 
@@ -125,11 +125,11 @@ namespace WebEcommerce.Areas.Admin.Controllers
             }
 
             return sb.ToString();
-        }*/
+        }*//*
         [HttpPost]
         public async Task<IActionResult> SendMessage(string toUserId, string messageContent)
         {
-            /*var currentUser = await _userManager.GetUserAsync(User);
+            *//*var currentUser = await _userManager.GetUserAsync(User);
             if (currentUser == null || string.IsNullOrEmpty(toUserId) || string.IsNullOrEmpty(messageContent))
             {
                 return BadRequest("Invalid message data.");
@@ -164,10 +164,10 @@ namespace WebEcommerce.Areas.Admin.Controllers
             // Đồng thời gửi lại tin nhắn cho người gửi
             await _hubContext.Clients.User(currentUser.Id).SendAsync("ReceiveMessage", chatMessage);
 
-            return View();*/
+            return View();*//*
             return View();
         }
 
-
+*/
     }
 }

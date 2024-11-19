@@ -1,25 +1,128 @@
-﻿<div class="container">
-    <div class="row p-1">
-        <div class="col-1">User</div>
-        <div class="col-5"><input type="text" id="userInput" /></div>
-    </div>
-    <div class="row p-1">
-        <div class="col-1">Message</div>
-        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6 text-end">
-            <input type="button" id="sendButton" value="Send Message" />
-        </div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6">
-            <hr />
-        </div>
-    </div>
-    <div class="row p-1">
-        <div class="col-6">
-            <ul id="messagesList"></ul>
+﻿@model WebEcommerce.ViewModels.ChatVM
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Hỗ trợ khách hàng";
+}
+<style>
+    .chat-right {
+        text-align: right;
+        background-color: #e1ffc7; /* Màu nền cho tin nhắn của người dùng */
+        margin: 5px;
+        padding: 10px;
+        border-radius: 10px;
+        display: inline-block;
+        max-width: 70%;
+    }
+
+    .chat-left {
+        text-align: left;
+        background-color: #f1f1f1; /* Màu nền cho tin nhắn từ người khác */
+        margin: 5px;
+        padding: 10px;
+        border-radius: 10px;
+        display: inline-block;
+        max-width: 70%;
+    }
+</style>
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Shop</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+        <li class="breadcrumb-item active text-white">Hỗ trợ Khách hàng</li>
+    </ol>
+</div>
+
+<div class="container">
+    <div class="content-wrapper">
+        <div class="row gutters">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="card m-0">
+                    <div class="row no-gutters">
+                        <!-- Danh sách người dùng -->
+                        <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-3">
+                            <div class="users-container">
+                                <div class="chat-search-box">
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="Search">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-info">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="users">
+                                    @foreach (var user in Model.UserLists)
+                                    {
+                                        <li class="person" data-chat="person1">
+                                            <a href="@Url.Action("Index", "Chat", new { userId = Model.CurrentUserId, toUserId = user.Id })" class="d-flex align-items-center">
+                                                <div class="user">
+                                                    <img src="@Url.Content("~/thumbnails/" + user.Image)" alt="@user.Name" class="rounded-circle" style="width: 40px; height: 40px;">
+                                                </div>
+                                                <p class="name-time">
+                                                    <span class="name">@user.Name</span>
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Tin nhắn -->
+                        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-9 col-9">
+                            <div class="selected-user">
+                                <span>To: <span class="name">@Model.SelectedUserName</span></span>
+                            </div>
+                            <div class="chat-container">
+                                <ul class="chat-box chatContainerScroll" id="messagesList">
+                                    @foreach (var message in Model.Messages)
+                                    {
+                                        if (message.FromUserId == Model.CurrentUserId)
+                                        {
+                                            <!-- Tin nhắn của người dùng hiện tại -->
+                                            <li class="chat-right">
+                                                <div class="chat-hour">
+                                                    @message.SendTime.ToString("HH:mm") <span class="fa fa-check-circle"></span>
+                                                </div>
+                                                <div class="chat-text">
+                                                    @message.MessageContent
+                                                </div>
+                                                <div class="chat-avatar">
+                                                    <img src="@Url.Content("~/thumbnails/" + message.FromUserAvatarUrl)" alt="User Avatar">
+                                                    <div class="chat-name">You</div>
+                                                </div>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <!-- Tin nhắn từ người khác -->
+                                            <li class="chat-left">
+                                                <div class="chat-avatar">
+                                                    <img src="@Url.Content("~/thumbnails/" + message.FromUserAvatarUrl)" alt="User Avatar">
+                                                    <div class="chat-name">@Model.UserLists.FirstOrDefault(u => u.Id == message.FromUserId)?.Name</div>
+                                                </div>
+                                                <div class="chat-text">
+                                                    @message.MessageContent
+                                                </div>
+                                                <div class="chat-hour">
+                                                    @message.SendTime.ToString("HH:mm") <span class="fa fa-check-circle"></span>
+                                                </div>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                                <div class="form-group mt-3 mb-0">
+                                    <div class="col-5"><input type="text" id="userInput" /></div>
+
+                                    <textarea class="form-control" id="messageInput" rows="3" placeholder="Type your message here..."></textarea>
+                                    <button id="sendButton" class="btn btn-primary">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

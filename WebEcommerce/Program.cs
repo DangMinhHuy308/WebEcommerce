@@ -1,5 +1,6 @@
 using AspNetCoreHero.ToastNotification;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using WebEcommerce.Data;
 using WebEcommerce.Helpers;
@@ -33,7 +34,8 @@ builder.Services.AddSession(options =>
 	options.Cookie.HttpOnly = true;
 	options.Cookie.IsEssential = true;
 });
-builder.Services.AddSingleton<IVnPayService, VnPayService>();
+/*builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+*/builder.Services.AddSingleton<IVnPayService, VnPayService>();
 builder.Services.AddSignalR();
 var app = builder.Build();
 DataSeeding();
