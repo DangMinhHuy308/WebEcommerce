@@ -4,6 +4,7 @@
 	{
         public int InvoiceId { get; set; }
 		public string? ApplicationUserId { get; set; }
+        //public int? ShippingId { get; set; }
         public string? Code { get; set; }
         public DateTime? OrderDate { get; set; } = DateTime.Now;
 		public DateTime? RequiredDate { get; set; }
@@ -21,6 +22,7 @@
 		public string? Notes { get; set; }
         public int? CouponId { get; set; } 
         public Coupon Coupon { get; set; }
+        //public Shipping Shipping { get; set; } 
         public virtual ApplicationUser ApplicationUser { get; set; }
         public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; } = new List<InvoiceDetail>();
     }

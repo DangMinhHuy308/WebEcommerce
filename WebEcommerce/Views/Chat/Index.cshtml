@@ -54,17 +54,24 @@
                                 <ul class="users">
                                     @foreach (var user in Model.UserLists)
                                     {
-                                        <li class="person" data-chat="person1">
-                                            <a href="@Url.Action("Index", "Chat", new { userId = Model.CurrentUserId, toUserId = user.Id })" class="d-flex align-items-center">
-                                                <div class="user">
-                                                    <img src="@Url.Content("~/thumbnails/" + user.Image)" alt="@user.Name" class="rounded-circle" style="width: 40px; height: 40px;">
-                                                </div>
-                                                <p class="name-time">
-                                                    <span class="name">@user.Name</span>
-                                                </p>
-                                            </a>
-                                        </li>
+                                        Console.WriteLine($"User: {user.Id} - {user.Name}");
+                                        @if (user.Id != Model.CurrentUserId) // Đảm bảo không hiển thị tài khoản hiện tại
+                                        {
+                                            <li class="person" data-chat="person1">
+                                                <a href="@Url.Action("Index", "Chat", new { userId = Model.CurrentUserId, toUserId = user.Id })" class="d-flex align-items-center">
+                                                    <div class="user">
+                                                        <img src="@Url.Content("~/thumbnails/" + user.Image)" alt="@user.Name" class="rounded-circle" style="width: 40px; height: 40px;">
+                                                    </div>
+                                                    <p class="name-time">
+                                                        <span class="name">@user.Name</span>
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
                                     }
+
+
+
                                 </ul>
                             </div>
                         </div>

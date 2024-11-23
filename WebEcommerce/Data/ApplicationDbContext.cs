@@ -16,9 +16,10 @@ namespace WebEcommerce.Data
 
         public DbSet<Message>? Messages { get; set; }
         public DbSet<Coupon>? Coupons { get; set; }
+        public DbSet<Shipping>? Shippings { get; set; }
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
 
@@ -98,6 +99,9 @@ namespace WebEcommerce.Data
 				.OnDelete(DeleteBehavior.Restrict);
 			//config the Coupon
             modelBuilder.Entity<Coupon>()
+				.HasKey(c => c.Id);
+			//config the Shipping
+			modelBuilder.Entity<Shipping>()
 				.HasKey(c => c.Id);
 		}
 	}
