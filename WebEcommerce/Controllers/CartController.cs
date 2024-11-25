@@ -7,6 +7,7 @@ using WebEcommerce.Models;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using WebEcommerce.Services;
+using Newtonsoft.Json;
 
 namespace WebEcommerce.Controllers
 {
@@ -37,7 +38,8 @@ namespace WebEcommerce.Controllers
             var cart = Cart;
             // Kiểm tra sản phẩm đã có trong giỏ chưa
             var item = cart.SingleOrDefault(x => x.ProductId == id);
-           
+         
+            
             if (item == null)
             {
                 // Lấy thông tin sản phẩm từ cơ sở dữ liệu
@@ -52,7 +54,7 @@ namespace WebEcommerce.Controllers
                         Image = product.Image,
                         Price = product.Price,
                         Quantity = quantity,
-                        CouponCode = couponCode
+                        CouponCode = couponCode,
                     });
                 }
             }
@@ -128,7 +130,7 @@ namespace WebEcommerce.Controllers
                 PaymentMethod = vm.PaymentMethod, 
                 ShippingMethod = vm.ShippingMethod, 
                 RequiredDate = DateTime.Now.AddDays(3),
-                ShippingFee = 10.0f, 
+                ShippingFee = vm.ShippingCost, 
                 StatusId = 1, 
                 Notes = vm.Notes,
                 Code = "DH" + rd.Next(0, 9) + rd.Next(0, 9) + rd.Next(0, 9) + rd.Next(0, 9)
@@ -222,7 +224,7 @@ namespace WebEcommerce.Controllers
                 Address = vm.Address,
                 PaymentMethod = "VNPay", 
                 ShippingMethod = "Fast", 
-                ShippingFee = 10.0f, 
+                ShippingFee = vm.ShippingCost, 
                 StatusId = 1, 
                 Notes = vm.Notes, 
                 Code = "DH" + new Random().Next(1000, 9999)
@@ -263,6 +265,9 @@ namespace WebEcommerce.Controllers
         {
             // Kiểm tra mã giảm giá hợp lệ
             var coupon = _context.Coupons.SingleOrDefault(c => c.Name == couponCode && c.DateEnd >= DateTime.Now);
+            
+            
+
             if (coupon == null)
             {
                 TempData["Error"] = "Mã giảm giá không hợp lệ hoặc đã hết hạn.";
@@ -286,6 +291,36 @@ namespace WebEcommerce.Controllers
             TempData["Success"] = "Mã giảm giá đã được áp dụng thành công!";
             return RedirectToAction("Index");
         }
-
+        [HttpPost]
+        [Route("Cart/GetShipping")]
+        public async Task<ActionResult> GetShipping(Shipping shippingModel, string tinh, string quan, string phuong)
+        {
+            var shipping = await _context.Shippings
+                .FirstOrDefaultAsync(x => x.City == tinh && x.District == quan && x.Ward == phuong);
+            decimal shippingPrice = 0;
+            if (shipping != null)
+            {
+                shippingPrice = (decimal)shipping.Price;
+            }
+            else
+            {
+                shippingPrice = 50000;
+            }
+            var shippingPriceJson =JsonConvert.SerializeObject(shippingPrice);
+            try
+            {
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(30),
+                    Secure = true
+                };
+                Response.Cookies.Append("ShippingPrice",shippingPriceJson,cookieOptions);
+            }
+            catch (Exception ex) {
+                Console.WriteLine($"Error adding shipping price cookie: {ex.Message }");
+            }
+            return Json(new { shippingPrice });
+        }
     }
 }

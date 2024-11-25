@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebEcommerce.Data;
+using WebEcommerce.Models;
 using WebEcommerce.ViewModels;
 using X.PagedList.Extensions;
 
@@ -30,7 +31,6 @@ namespace WebEcommerce.Areas.Admin.Controllers
             int pageSize = 5;
             int pageNum = page ?? 1;
 
-            // lấy toàn bộ mã giảm giá trong cơ sở dữ liệu
             var shippings = await _context.Shippings.ToListAsync();
             var listOfShippingVM = shippings.Select(x => new ShippingVM()
             {
@@ -41,8 +41,57 @@ namespace WebEcommerce.Areas.Admin.Controllers
                 Price = x.Price,
             });
 
-            var pagedCouponVM = listOfShippingVM.ToPagedList(pageNum, pageSize);
-            return View(pagedCouponVM);
+            var pagedShippingVM = listOfShippingVM.ToPagedList(pageNum, pageSize);
+            return View(pagedShippingVM);
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> Create(Shipping shippingModel, string phuong, string quan, string tinh, decimal price)
+        {
+            shippingModel.City= tinh;
+            shippingModel.District = quan;
+            shippingModel.Ward = phuong;
+            shippingModel.Price = price;
+            try
+            {
+                var shipping= await _context.Shippings
+                    .AnyAsync(x => x.City == tinh && x.District == quan && x.Ward == phuong);
+                if (shipping)
+                {
+                    return Ok(new { duplicate = true, message = "Dữ liệu trùng lặp" });
+                }
+                _context.Shippings.Add(shippingModel);
+                await _context.SaveChangesAsync();
+                return Ok(new { success = true, message = "Thành công" });
+            }
+            catch(Exception)
+            {
+                return StatusCode(500,"An error occurred while processing your request.");
+            }
+        }
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            // Tìm mã giảm giá theo id
+            var shipping = await _context.Shippings.FirstOrDefaultAsync(x => x.Id == id);
+            if (shipping == null)
+            {
+                _notification.Error("Shippings not found");
+                return RedirectToAction("Index");
+            }
+
+            // Xóa mã giảm giá khỏi csdl
+            _context.Shippings.Remove(shipping);
+            await _context.SaveChangesAsync();
+            _notification.Success("Shippings deleted successfully");
+            return RedirectToAction("Index");
         }
     }
 }

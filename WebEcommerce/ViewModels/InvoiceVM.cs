@@ -15,7 +15,7 @@
         public string? Address { get; set; }
         public string? PaymentMethod { get; set; }
         public string? ShippingMethod { get; set; }
-        public float? ShippingFee { get; set; }
+        public decimal? ShippingFee { get; set; }
         public int StatusId { get; set; }
         public string? Notes { get; set; }
         //public int? Quantity { get; set; }

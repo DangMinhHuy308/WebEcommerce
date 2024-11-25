@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebEcommerce.Data;
 
@@ -11,9 +12,11 @@ using WebEcommerce.Data;
 namespace WebEcommerce.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241125082445_Change")]
+    partial class Change
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -344,8 +347,8 @@ namespace WebEcommerce.Migrations
                     b.Property<DateTime?>("RequiredDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("ShippingFee")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<float?>("ShippingFee")
+                        .HasColumnType("real");
 
                     b.Property<string>("ShippingMethod")
                         .HasColumnType("nvarchar(max)");
@@ -509,16 +512,25 @@ namespace WebEcommerce.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("City")
+                    b.Property<int?>("City")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CityName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("District")
+                    b.Property<int?>("District")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DistrictName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Ward")
+                    b.Property<int?>("Ward")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WardName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
