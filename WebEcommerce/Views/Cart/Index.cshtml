@@ -114,9 +114,11 @@
                             <h5 class="mb-0 me-4">Subtotal:</h5>
                             <p class="mb-0">@WebEcommerce.Common.Common.FormatNumber(Model.Sum(x => x.TotalPrice), 0)đ</p>
                         </div>
-
+                        <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
+                            <h5 class="mb-0  me-4">Shipping</h5>
+                            <p class="mb-0 pe-4 shipping-price">0đ</p>  
+                        </div>
                         <div class="mb-4">
-                            <h4 class="fw-bold mb-3">Shipping</h4> <!-- Thêm tiêu đề Shipping -->
                             <div class="mb-4">
                                 <label for="tinh">Tỉnh</label>
                                 <select class="form-control css_select" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
@@ -142,8 +144,9 @@
                     </div>
                     <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                         <h5 class="mb-0 ps-4 me-4">Total</h5>
-                        <p class="mb-0 pe-4">@WebEcommerce.Common.Common.FormatNumber(Model.Sum(x => x.TotalPrice), 0)đ</p>
+                        <p class="mb-0 pe-4 total-price">@WebEcommerce.Common.Common.FormatNumber(Model.Sum(x => x.TotalPrice), 0)đ</p>
                     </div>
+                    
                     <a class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" asp-action="CheckOut" asp-controller="Cart">Tiến hành thanh toán</a>
                 </div>
             </div>
@@ -155,28 +158,37 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $(".btn-add-shipping").click(function () {
+    $(".btn-add-shipping").click(function () {
+        var tinh = $("#tinh").find('option:selected').text();
+        var quan = $("#quan").find('option:selected').text();
+        var phuong = $("#phuong").find('option:selected').text();
 
-                var tinh = $("#tinh").find('option:selected').text();
-                var quan = $("#quan").find('option:selected').text();
-                var phuong = $("#phuong").find('option:selected').text();
+        if (tinh == '' || quan == '' || phuong == '') {
+            alert("Không được bỏ trống");
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetShipping", "Cart")",  // Đảm bảo URL đúng
+                data: { tinh: tinh, quan: quan, phuong: phuong },
+                success: function (result) {
+                    if (result.shippingPrice) {
+                        // Cập nhật giá ship vào phần tử HTML
+                        $(".shipping-price").text(result.shippingPrice.toLocaleString() + "đ");
 
-                if (tinh == '' || quan == '' || phuong == '') {
-                    alert("Không được bỏ trống");
-                } else {
-                    $.ajax({
-                        type: "POST",
-                        url: "@Url.Action("Index", "Cart")",
-                        data: { tinh: tinh, quan: quan, phuong: phuong },
-                        success: function (result) {
-                            if (result) {
-                                // location.reload();
-                            }
-                        }
-                    })
+                        // Cập nhật tổng tiền với phí ship
+                        var totalPrice = @Model.Sum(x => x.TotalPrice) + result.shippingPrice;
+                        $(".total-price").text(totalPrice.toLocaleString() + "đ");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Lỗi khi lấy phí ship:", error);
                 }
-            });
-        });
+            })
+        }
+    });
+});
+
+
     </script>
     <script>
         

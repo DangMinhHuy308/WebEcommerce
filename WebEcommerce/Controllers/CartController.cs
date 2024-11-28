@@ -29,6 +29,14 @@ namespace WebEcommerce.Controllers
         // Hiển thị giỏ hàng
         public IActionResult Index()
         {
+            var shippingPriceCookie = Request.Cookies["ShippingPrice"];
+            decimal shippingPrice = 0;
+            if (shippingPriceCookie != null)
+            {
+                var shippingPriceJson = shippingPriceCookie;
+                shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceJson);
+            }
+            ViewBag.ShippingPrice = shippingPrice;
             return View(Cart);
         }
 
@@ -114,7 +122,13 @@ namespace WebEcommerce.Controllers
             {
                 return View(vm);
             }
-
+            var shippingPriceCookie = Request.Cookies["ShippingPrice"];
+            decimal shippingPrice = 0;
+            if (shippingPriceCookie != null)
+            {
+                var shippingPriceJson = shippingPriceCookie;
+                shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceCookie);
+            }
             // Khởi tạo random để tạo mã đơn hàng
             Random rd = new Random();
             var invoice = new Invoice
@@ -130,7 +144,7 @@ namespace WebEcommerce.Controllers
                 PaymentMethod = vm.PaymentMethod, 
                 ShippingMethod = vm.ShippingMethod, 
                 RequiredDate = DateTime.Now.AddDays(3),
-                ShippingFee = vm.ShippingCost, 
+                ShippingFee = shippingPrice, 
                 StatusId = 1, 
                 Notes = vm.Notes,
                 Code = "DH" + rd.Next(0, 9) + rd.Next(0, 9) + rd.Next(0, 9) + rd.Next(0, 9)
@@ -147,6 +161,7 @@ namespace WebEcommerce.Controllers
                     Amount = (double)(Cart.Sum(x => x.Price * x.Quantity) ?? 0),
                     CreatedDate = DateTime.Now
                 };
+
                 return Redirect(_vnPayService.CreatePaymentUrl(HttpContext, vnPayModel));
             }
 
@@ -185,6 +200,8 @@ namespace WebEcommerce.Controllers
             var subject = "Đặt hàng thành công";
             var message ="Đặt hàng thành công";
             await _emailSender.SendEmailAsync(receiver, subject, message);
+            ViewBag.ShippingPrice = shippingPrice;
+            Console.WriteLine($"Cookie Value: {shippingPriceCookie}");
 
             // Lưu hóa đơn vào cơ sở dữ liệu
             _context.Invoices.Add(invoice);
@@ -266,8 +283,6 @@ namespace WebEcommerce.Controllers
             // Kiểm tra mã giảm giá hợp lệ
             var coupon = _context.Coupons.SingleOrDefault(c => c.Name == couponCode && c.DateEnd >= DateTime.Now);
             
-            
-
             if (coupon == null)
             {
                 TempData["Error"] = "Mã giảm giá không hợp lệ hoặc đã hết hạn.";

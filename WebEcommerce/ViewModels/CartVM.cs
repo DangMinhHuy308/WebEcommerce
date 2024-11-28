@@ -10,7 +10,7 @@
         public string? CouponCode { get; set; }
         public decimal? Price { get; set; }
         public decimal? TotalPrice => Quantity * Price;
-        public decimal? ShippingCost{ get; set; }
+        public decimal? ShippingFee { get; set; }
     }
     public class CartIconVM
     {
