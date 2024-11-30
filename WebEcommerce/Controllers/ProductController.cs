@@ -18,7 +18,7 @@ namespace WebEcommerce.Controllers
         // Hiển thị danh sách sản phẩm theo danh mục và phân trang
         public IActionResult Index(int? id, int? page)
         {
-            int pageSize = 5;
+            int pageSize = 9;
             int pageNum = page ?? 1;
             // Lấy tất cả sản sẩm trong cơ sở dữ liệu
             var product = _context.Products.AsQueryable();

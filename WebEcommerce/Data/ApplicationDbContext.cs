@@ -18,8 +18,8 @@ namespace WebEcommerce.Data
         public DbSet<Coupon>? Coupons { get; set; }
         public DbSet<Shipping>? Shippings { get; set; }
 
-
-		protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public DbSet<Post> Posts { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
 
@@ -103,7 +103,10 @@ namespace WebEcommerce.Data
 			//config the Shipping
 			modelBuilder.Entity<Shipping>()
 				.HasKey(c => c.Id);
-		}
+            //config the Shipping
+            modelBuilder.Entity<Post>()
+                .HasKey(p => p.Id);
+        }
 	}
 
 

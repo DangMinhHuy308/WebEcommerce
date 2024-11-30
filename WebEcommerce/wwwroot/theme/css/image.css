@@ -1,0 +1,261 @@
+﻿/* Tổng quan cho container của ảnh */
+.fruite-img {
+    width: 261px; /* Chiều rộng cố định */
+    height: 196px; /* Chiều cao cố định */
+    overflow: hidden; /* Ẩn các phần ảnh vượt khỏi khung */
+    border-radius: 10px; /* Bo góc mềm mại */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+    transition: transform 0.3s, box-shadow 0.3s; /* Hiệu ứng khi hover */
+    margin: 10px auto; /* Căn giữa và thêm khoảng cách */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    /* Ảnh bên trong */
+    .fruite-img img {
+        width: 100%; /* Đầy chiều rộng container */
+        height: 100%; /* Đầy chiều cao container */
+        object-fit: cover; /* Đảm bảo hình ảnh lấp đầy container mà không bị méo */
+        border-radius: 10px 10px 0 0; /* Bo góc trên */
+    }
+
+    /* Hiệu ứng hover */
+    .fruite-img:hover {
+        transform: scale(1.05); /* Phóng to một chút khi hover */
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Tăng độ mạnh của đổ bóng */
+    }
+
+    /* Link */
+    .fruite-img a {
+        text-decoration: none; /* Bỏ gạch chân cho link */
+        display: inline-block;
+    }
+
+/* Tổng quan cho phần footer */
+.card-footer {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-top: 1px solid #dee2e6;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pagination a {
+    border: none;
+}
+
+/* Pagination container */
+.product.navigation {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    gap: 5px;
+}
+
+/* Các item trong pagination */
+.pagination .page-item {
+    display: inline-block;
+    margin: 0 2px;
+}
+
+/* Liên kết trong pagination */
+.pagination .page-link {
+    text-decoration: none;
+    color: #007bff;
+    padding: 6px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+    /* Liên kết khi hover */
+    .pagination .page-link:hover {
+        background-color: #e9ecef;
+        color: #0056b3;
+        text-decoration: none;
+    }
+
+/* Trang hiện tại */
+.pagination .active .page-link {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Disable trạng thái */
+.pagination .disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+.blog-grid {
+    position: relative;
+    box-shadow: 0 1rem 1.75rem 0 rgba(45, 55, 75, 0.1);
+    height: 100%;
+    border: 0.0625rem solid rgba(220, 224, 229, 0.6);
+    border-radius: 0.25rem;
+    transition: all .2s ease-in-out;
+    height: 100%
+}
+
+    .blog-grid span {
+        color: #292dc2
+    }
+
+    .blog-grid img {
+        width: 100%;
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem
+    }
+
+.blog-grid-text {
+    position: relative
+}
+
+    .blog-grid-text > span {
+        color: #292dc2;
+        font-size: 13px;
+        padding-right: 5px
+    }
+
+    .blog-grid-text h4 {
+        line-height: normal;
+        margin-bottom: 15px
+    }
+
+    .blog-grid-text .meta-style2 {
+        border-top: 1px dashed #cee1f8;
+        padding-top: 15px
+    }
+
+        .blog-grid-text .meta-style2 ul li {
+            margin-bottom: 0;
+            font-weight: 500
+        }
+
+            .blog-grid-text .meta-style2 ul li:last-child {
+                margin-right: 0
+            }
+
+    .blog-grid-text ul {
+        margin: 0;
+        padding: 0
+    }
+
+        .blog-grid-text ul li {
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 5px 10px 5px 0
+        }
+
+            .blog-grid-text ul li:last-child {
+                margin-right: 0
+            }
+
+            .blog-grid-text ul li i {
+                font-size: 14px;
+                font-weight: 600;
+                margin-right: 5px
+            }
+
+    .blog-grid-text p {
+        font-weight: 400;
+        padding: 0
+    }
+
+.blog-list-left-heading:after,
+.blog-title-box:after {
+    content: '';
+    height: 2px
+}
+
+.blog-grid-simple-content a:hover {
+    color: #1d184a
+}
+
+    .blog-grid-simple-content a:hover:after {
+        color: #1d184a
+    }
+
+.blog-grid-text {
+    position: relative
+}
+
+    .blog-grid-text > span {
+        color: #292dc2;
+        font-size: 13px;
+        padding-right: 5px
+    }
+
+    .blog-grid-text h4 {
+        line-height: normal;
+        margin-bottom: 15px
+    }
+
+    .blog-grid-text .meta-style2 {
+        border-top: 1px dashed #cee1f8 !important;
+        padding-top: 15px
+    }
+
+        .blog-grid-text .meta-style2 ul li {
+            margin-bottom: 0;
+            font-weight: 500
+        }
+
+            .blog-grid-text .meta-style2 ul li:last-child {
+                margin-right: 0
+            }
+
+    .blog-grid-text ul {
+        margin: 0;
+        padding: 0
+    }
+
+        .blog-grid-text ul li {
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 5px 10px 5px 0
+        }
+
+            .blog-grid-text ul li:last-child {
+                margin-right: 0
+            }
+
+            .blog-grid-text ul li i {
+                font-size: 14px;
+                font-weight: 600;
+                margin-right: 5px
+            }
+
+    .blog-grid-text p {
+        font-weight: 400;
+        padding: 0
+    }
+
+a, a:active, a:focus {
+    /*color: #81c408 !im;*/
+    text-decoration: none;
+    transition-timing-function: ease-in-out;
+    -ms-transition-timing-function: ease-in-out;
+    -moz-transition-timing-function: ease-in-out;
+    -webkit-transition-timing-function: ease-in-out;
+    -o-transition-timing-function: ease-in-out;
+    transition-duration: .2s;
+    -ms-transition-duration: .2s;
+    -moz-transition-duration: .2s;
+    -webkit-transition-duration: .2s;
+    -o-transition-duration: .2s;
+}
+
+
+.mt-6, .my-6 {
+    margin-top: 3.5rem;
+}
+

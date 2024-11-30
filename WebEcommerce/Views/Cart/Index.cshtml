@@ -99,9 +99,18 @@
         <div class="mt-5">
             <form asp-action="ApplyCoupon" method="post">
                 <div class="d-flex">
-                    <input type="text" name="CouponCode" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Mã giảm giá" required>
+                    <input type="text" name="CouponCode" class="border-0 border-bottom rounded me-5 py-3 mb-4" placeholder="Mã giảm giá"
+                           value="@ViewBag.AppliedCoupon" <!-- Hiển thị mã giảm giá đã áp dụng -->
                     <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="submit">Áp dụng</button>
                 </div>
+                @if (TempData["Error"] != null)
+                {
+                    <p class="text-danger">@TempData["Error"]</p>
+                }
+                @if (TempData["Success"] != null)
+                {
+                    <p class="text-success">@TempData["Success"]</p>
+                }
             </form>
         </div>
         <div class="row g-4 justify-content-end">
@@ -229,6 +238,7 @@
                 }
             });
         });
+
     </script>
 
 }

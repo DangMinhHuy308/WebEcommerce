@@ -56,8 +56,8 @@
                         <i class="fas fa-car-side fa-3x text-white"></i>
                     </div>
                     <div class="featurs-content text-center">
-                        <h5>Free Shipping</h5>
-                        <p class="mb-0">Free on order over $300</p>
+                        <h5>Miễn phí vận chuyển</h5>
+                        <p class="mb-0">Dành cho đơn hàng trên 300.000đ</p>
                     </div>
                 </div>
             </div>
@@ -67,8 +67,8 @@
                         <i class="fas fa-user-shield fa-3x text-white"></i>
                     </div>
                     <div class="featurs-content text-center">
-                        <h5>Security Payment</h5>
-                        <p class="mb-0">100% security payment</p>
+                        <h5>Thanh toán an toàn</h5>
+                        <p class="mb-0">100% an toàn</p>
                     </div>
                 </div>
             </div>
@@ -78,19 +78,19 @@
                         <i class="fas fa-exchange-alt fa-3x text-white"></i>
                     </div>
                     <div class="featurs-content text-center">
-                        <h5>30 Day Return</h5>
-                        <p class="mb-0">30 day money guarantee</p>
+                        <h5>Hoàn trả trong 30 ngày</h5>
+                        <p class="mb-0">Đảm bảo hoàn tiền trong 30 ngày</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="featurs-item text-center rounded bg-light p-4">
                     <div class="featurs-icon btn-square rounded-circle bg-secondary mb-5 mx-auto">
-                        <i class="fa fa-phone-alt fa-3x text-white"></i>
+                        <i class="fas fa-comments  fa-3x text-white"></i>
                     </div>
                     <div class="featurs-content text-center">
-                        <h5>24/7 Support</h5>
-                        <p class="mb-0">Support every time fast</p>
+                        <h5>Hỗ trợ 24/7</h5>
+                        <p class="mb-0">Hỗ trợ nhanh chóng</p>
                     </div>
                 </div>
             </div>
@@ -113,9 +113,12 @@
                     {
                         <div class="col-md-6 col-lg-4 col-xl-3">
                             <div class="rounded position-relative fruite-item">
-                                <a asp-action="Detail" asp-controller="Product" asp-route-id="@product.Id">
-                                    <img src="~/thumbnails/@product.Image" class="img-fluid w-100 rounded-top" alt="">
-                                </a>
+                                <div class="fruite-img">
+
+                                    <a asp-action="Detail" asp-controller="Product" asp-route-id="@product.Id">
+                                        <img src="~/thumbnails/@product.Image" class="img-fluid w-100 rounded-top" alt="">
+                                    </a>
+                                </div>
                                 <div class="p-4 border border-secondary border-top-0 rounded-bottom">
                                     <h4>@product.Name</h4>
                                     <div class="d-flex justify-content-between flex-lg-wrap">

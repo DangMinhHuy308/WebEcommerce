@@ -29,6 +29,8 @@ namespace WebEcommerce.Controllers
         // Hiển thị giỏ hàng
         public IActionResult Index()
         {
+            string appliedCoupon = Cart.FirstOrDefault()?.CouponCode ?? string.Empty;
+
             var shippingPriceCookie = Request.Cookies["ShippingPrice"];
             decimal shippingPrice = 0;
             if (shippingPriceCookie != null)
@@ -37,6 +39,7 @@ namespace WebEcommerce.Controllers
                 shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceJson);
             }
             ViewBag.ShippingPrice = shippingPrice;
+            ViewBag.AppliedCoupon = appliedCoupon; // Truyền mã giảm giá sang View
             return View(Cart);
         }
 
@@ -127,7 +130,7 @@ namespace WebEcommerce.Controllers
             if (shippingPriceCookie != null)
             {
                 var shippingPriceJson = shippingPriceCookie;
-                shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceCookie);
+                shippingPrice = JsonConvert.DeserializeObject<decimal>(shippingPriceJson);
             }
             // Khởi tạo random để tạo mã đơn hàng
             Random rd = new Random();
@@ -200,9 +203,9 @@ namespace WebEcommerce.Controllers
             var subject = "Đặt hàng thành công";
             var message ="Đặt hàng thành công";
             await _emailSender.SendEmailAsync(receiver, subject, message);
-            ViewBag.ShippingPrice = shippingPrice;
             Console.WriteLine($"Cookie Value: {shippingPriceCookie}");
 
+            ViewBag.ShippingPrice = shippingPrice;
             // Lưu hóa đơn vào cơ sở dữ liệu
             _context.Invoices.Add(invoice);
             _context.SaveChanges();

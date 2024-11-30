@@ -100,15 +100,12 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <h5>Shipping cost:</h5>
-                        <p>@WebEcommerce.Common.Common.FormatNumber((decimal?)ViewBag.ShippingPrice ?? 0, 0)đ</p>
+                        <p>0đ</p>
                     </div>
-                    <div class="form-check mt-4">
-                        <input type="radio" class="form-check-input" id="BankTransfer" name="PaymentMethod" value="BankTransfer">
-                        <label class="form-check-label" for="BankTransfer">Direct Bank Transfer</label>
-                    </div>
+                    
                     <div class="form-check mt-4">
                         <input type="radio" class="form-check-input" id="CashOnDelivery" name="PaymentMethod" value="CashOnDelivery">
-                        <label class="form-check-label" for="CashOnDelivery">Cash On Delivery</label>
+                        <label class="form-check-label" for="CashOnDelivery">Tiền mặt</label>
                     </div>
                      <div class="form-check mt-4">
                     <input type="radio" class="form-check-input" id="VNPay" name="PaymentMethod" value="VNPay">

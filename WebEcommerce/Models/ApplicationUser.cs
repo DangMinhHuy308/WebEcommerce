@@ -10,7 +10,7 @@ namespace WebEcommerce.Models
         public string? Address { get; set; }
 		public bool Gender{ get; set; } = true;
 
-
+        public List<Post>? Posts { get; set; }
         // Navigation Properties
         public virtual ICollection<Invoice> Invoices { get; set; }
         // Các tin nhắn người dùng gửi

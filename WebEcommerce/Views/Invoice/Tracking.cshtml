@@ -33,7 +33,16 @@
                         <tr>
                             <td>@i.Code</td>
                             <td>@i.OrderDate</td>
-                            <td>@i.DeliveryDate</td>
+                            <td>
+                                    @if(i.DeliveryDate.HasValue == true)
+                                    {
+                                        <span>@i.DeliveryDate</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Chưa cập nhập</span>
+                                    }
+                                </td>
                             <td>
                                 @if (i.StatusId == 1)
                                 {

@@ -1,0 +1,61 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<WebEcommerce.ViewModels.PostVM>
+@{
+    ViewData["Title"] = "Món ngon mỗi ngày";
+}
+<div class="container-fluid page-header py-5" style="margin-bottom: 2rem;">
+    <h1 class="text-center text-white display-6">Món ngon mỗi ngày</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+        <li class="breadcrumb-item active text-white">Món ngon mỗi ngày</li>
+    </ol>
+</div>
+<div class="container">
+    <div class="row mt-n5">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var i in Model)
+            {
+                <div class="col-md-6 col-lg-4 mt-5 wow fadeInUp" data-wow-delay=".2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+                    <div class="blog-grid">
+                        <div class="blog-grid-img position-relative">
+                            <img src="~/thumbnails/@i.ThumbnailUrl" class="img-fluid w-100 rounded-top" />
+                        </div>
+                        <div class="blog-grid-text p-4">
+                            <h3 class="h5 mb-3"><a asp-controller="Post" asp-action="Detail" asp-route-id="@i.Id">@i.Title</a></h3>
+                            <p class="display-30">@i.ShortDescription</p>
+                            <div class="meta meta-style2">
+                                <ul>
+                                    <li>
+                                        <a href="#!">
+                                            <i class="fas fa-calendar-alt"></i>@i.CreatedDate
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No posts available.</p>
+        }
+
+    </div>
+    <div class="card-footer">
+        Page @(Model?.PageCount < Model?.PageNumber ? 0 : Model?.PageNumber) of @Model?.PageCount
+        @Html.PagedListPager(Model, page => Url.Action("Index",
+                 new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }),
+                 new PagedListRenderOptions()
+        {
+            ContainerDivClasses = new List<string> { "post", "navigation" },
+            UlElementClasses = new List<string> { "pagination" },
+            LiElementClasses = new List<string> { "page-item", "page-link" },
+            ActiveLiElementClass = "active",
+
+        })
+    </div>
+</div>

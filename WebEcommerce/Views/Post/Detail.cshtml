@@ -1,0 +1,21 @@
+﻿@model WebEcommerce.ViewModels.PostVM
+
+@{
+    ViewData["Title"] = "Post";
+    
+}
+
+<div class="container-fluid page-header py-5" style="margin-bottom: 2rem;">
+    <h1 class="text-center text-white display-6">Món ngon mỗi ngày</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+        <li class="breadcrumb-item active text-white">Món ngon mỗi ngày</li>
+    </ol>
+</div>
+<div class="container mt-5">
+    <h1>@Model.Title</h1>
+
+	<div class="content mt-4">
+        <p>@Html.Raw(@Model.Description)</p>
+    </div>
+</div>

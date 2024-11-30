@@ -1,7 +1,16 @@
-﻿@model IEnumerable<WebEcommerce.ViewModels.ProductVM>
+﻿@model IPagedList<WebEcommerce.ViewModels.ProductVM>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using System.Globalization
 @{
     Layout = "_ProductList";
+    ViewData["Title"] = "Sản phẩm";
 }
+<style>
+   
+
+
+</style>
 <!-- Single Page Header start -->
 @section BreadCum {
     <div class="container-fluid page-header py-5">
@@ -38,16 +47,16 @@
     </div>
 }
 
-<div class="col-12">
-    <div class="pagination d-flex justify-content-center mt-5">
-        <a href="#" class="rounded">&laquo;</a>
-        <a href="#" class="active rounded">1</a>
-        <a href="#" class="rounded">2</a>
-        <a href="#" class="rounded">3</a>
-        <a href="#" class="rounded">4</a>
-        <a href="#" class="rounded">5</a>
-        <a href="#" class="rounded">6</a>
-        <a href="#" class="rounded">&raquo;</a>
-    </div>
+<div class="card-footer">
+    Page @(Model?.PageCount < Model?.PageNumber ? 0 : Model?.PageNumber) of @Model?.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+            new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }),
+            new PagedListRenderOptions()
+    {
+        ContainerDivClasses = new List<string> { "product", "navigation" },
+        UlElementClasses = new List<string> { "pagination" },
+        LiElementClasses = new List<string> { "page-item", "page-link" },
+        ActiveLiElementClass = "active",
+    })
 </div>
 <!-- Fruits Shop End-->
