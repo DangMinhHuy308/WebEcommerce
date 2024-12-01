@@ -8,7 +8,7 @@ Market Website is an e-commerce platform developed with ASP.NET Core MVC, enabli
 * Framework: ASP.NET CORE, Boostrap 5.
 
 ## Setup Instructions
-1. Clone this repository to your local machine: git clone https://github.com/DangMinhHuy308/WebEcommerce.git
+1. Clone this repository: git clone https://github.com/DangMinhHuy308/WebEcommerce.git
 2. Restore NuGet packages: dotnet restore
 3. Apply migrations to set up the database: dotnet ef database update
 4. Run the project: dotnet run
