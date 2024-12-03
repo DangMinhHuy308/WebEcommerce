@@ -1,0 +1,8 @@
+[phases]
+  setup = "dotnet-sdk"
+  install = "dotnet restore"
+  build = "dotnet publish --no-restore -c Release -o out"
+  start = "dotnet out/WebEcommerce.dll"
+
+[variables]
+  ASPNETCORE_URLS = "http://0.0.0.0:5000"
