@@ -66,9 +66,12 @@ namespace WebEcommerce.Areas.Admin.Controllers
             {
                 return View(vm);
             }
-            var category = new Category();
-            category.CategoryName = vm.Name;
-            category.Description = vm.Description;
+            var category = new Category()
+            {
+                CategoryName = vm.Name,
+                Description = vm.Description
+            };
+            
             
             if (category.CategoryName != null) {
                 string slug = vm.Name!.Trim();

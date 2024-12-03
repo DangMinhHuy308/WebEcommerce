@@ -25,6 +25,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/AccessDenied";
 
 });
+// Enable logging
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddDistributedMemoryCache();
