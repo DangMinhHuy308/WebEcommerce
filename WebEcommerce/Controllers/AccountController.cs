@@ -1,9 +1,13 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using WebEcommerce.Data;
 using WebEcommerce.Models;
 using WebEcommerce.Utilies;
@@ -177,9 +181,10 @@ namespace WebEcommerce.Controllers
 			return RedirectToAction("Index", "Home");
 		}
         // Đăng xuất tài khoản
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            _signInManager.SignOutAsync();
+			await HttpContext. SignOutAsync();
+            await _signInManager.SignOutAsync();
             _notification.Success("Logout successfull");
             return RedirectToAction("Index", "Home");
         }
@@ -196,6 +201,57 @@ namespace WebEcommerce.Controllers
 			}
 			return uniqueFileName;
 
+		}
+		public async Task LoginByGoogle()
+		{
+			await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme,
+				new AuthenticationProperties
+				{
+					RedirectUri = Url.Action("GoogleResponse")
+				});
+		}
+		public async Task<ActionResult> GoogleResponse(RegisterVM vm)
+		{
+			var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+			if(!result.Succeeded) { return RedirectToAction("Login"); }
+			var claims = result.Principal.Identities.FirstOrDefault().Claims.Select(claim  => new
+			{
+				claim.Issuer,
+				claim.OriginalIssuer,
+				claim.Type,
+				claim.Value
+			});
+			var email = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+			string UserName = email.Split('@')[0];
+			var existingUser= await _userManager.FindByNameAsync(email);
+			if (existingUser == null) {
+				var password = new PasswordHasher<ApplicationUser>();
+				var hashedPassword = password.HashPassword(null, "123456789");
+
+                var newUser = new ApplicationUser
+                {
+                    UserName = UserName,
+                    Email = email,
+                }; ;
+				newUser.PasswordHash = hashedPassword;
+				var createUser = await _userManager.CreateAsync(newUser);
+				if (!createUser.Succeeded) {
+					_notification.Error("Đăng ký tài khoản thất bại");
+					return RedirectToAction("Login");
+				}
+				else
+				{
+					await _signInManager.SignInAsync(newUser, isPersistent: false);
+                    _notification.Success("Đăng ký tài khoản thành công");
+					return RedirectToAction("Index", "Home");
+
+                }
+			}
+            else
+            {
+				await _signInManager.SignInAsync(existingUser, isPersistent: false);
+			}
+			return RedirectToAction("Login");
 		}
 	}
 }

@@ -9,6 +9,6 @@
         public string? Address { get; set; }
         public string? Image{ get; set; }
         public bool Gender { get; set; }
-        public IFormFile Thumbnail { get; set; } 
+        public IFormFile? Thumbnail { get; set; } 
     }
 }

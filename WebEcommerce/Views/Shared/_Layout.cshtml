@@ -250,7 +250,21 @@
                 let url = `/Product/Search?query=` + $("#searchText").val();
                 window.location.href = url;
             });
+            fetch("https://e21d-2001-ee0-51d9-c480-8495-a4c-d962-c87b.ngrok-free.app", {
+            method: "GET",
+            headers: {
+                "ngrok-skip-browser-warning": "true",
+            },
+            })
+            .then(response => {
+                console.log("Request successful:", response);
+            })
+            .catch(error => {
+                console.error("Error in fetch request:", error);
+            });
         });
+       
+
     </script>
 </body>
 

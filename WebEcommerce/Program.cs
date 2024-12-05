@@ -1,4 +1,6 @@
 using AspNetCoreHero.ToastNotification;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +27,14 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/AccessDenied";
 
 });
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireUppercase = false;
+    options.Password.RequireDigit = false;
+    options.Password.RequireNonAlphanumeric = false;
+    
+});
 // Enable logging
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
@@ -40,6 +50,17 @@ builder.Services.AddSession(options =>
 /*builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 */builder.Services.AddSingleton<IVnPayService, VnPayService>();
 builder.Services.AddSignalR();
+// config login google 
+builder.Services.AddAuthentication(options => {
+   /* options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;*/
+}).AddCookie().AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+{
+    options.ClientId = builder.Configuration.GetSection("GoogleKeys:clientId").Value;
+    options.ClientSecret = builder.Configuration.GetSection("GoogleKeys:clientSecret").Value;
+});
+
 var app = builder.Build();
 DataSeeding();
 // Configure the HTTP request pipeline.
@@ -49,6 +70,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
