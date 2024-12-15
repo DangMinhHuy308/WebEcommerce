@@ -11,12 +11,12 @@ To proceed, use the following credentials:
 * Username: 11206831
 * Password: 60-dayfreetrial
 
-Navigate to admin panel by adding /admin/ to your website's URL. For example:
+Navigate to admin panel by adding /admin/ to website's URL. For example:
 
 http://choxanh-001-site1.otempurl.com/admin/login
 
-Username: admin@gmail.com
-Password: Admin@0011.com
+* Username: admin@gmail.com
+* Password: Admin@0011.com
 
 ## Technologies Used
 * Back-end: C#.
